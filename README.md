@@ -76,4 +76,3 @@ public class ExampleUnityCard : CustomCardUnity
 }
 ```
 Replace placeholders like `[Your Mod Initials]` with your actual content.
-#
