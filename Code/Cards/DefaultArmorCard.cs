@@ -18,7 +18,8 @@ namespace JARL
         public float reactivateArmorValue;
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            player.data.GetAdditionalData().armorHandler.AddArmor("Default", maxArmorValue, regenerationRate, regenCooldownSeconds, armorReactivateType, reactivateArmorValue);
+            
+            ArmorHandlerExtensions.AddArmor(player.playerID, "Default", maxArmorValue, regenerationRate, regenCooldownSeconds, armorReactivateType, reactivateArmorValue);
         }
 
         public override string GetModName()

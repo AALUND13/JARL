@@ -2,6 +2,7 @@
 using JARL.ArmorFramework.Classes;
 using JARL.ArmorFramework.Utlis;
 using JARL.Extensions;
+using Photon.Realtime;
 using System.Collections.Generic;
 using System.Linq;
 using UnboundLib;
@@ -66,7 +67,7 @@ namespace JARL.ArmorFramework
         {
             NetworkingManager.RegisterEvent("AddArmor", (data) =>
             {
-                ArmorBase armor = ArmorUtils.GetArmorByType((ArmorHandler)data[0], (string)data[1]);
+                ArmorBase armor = ArmorUtils.GetArmorByType(PlayerManager.instance.players.Find(player => player.playerID == (int)data[0]).GetComponent<ArmorHandler>(), (string)data[1]);
 
                 armor.maxArmorValue += Mathf.Max((float)data[2], 0);
                 armor.armorRegenerationRate += Mathf.Max((float)data[3], 0);
