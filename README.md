@@ -68,7 +68,7 @@ public class ExampleUnityCard : CustomCardUnity
 {
     public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
     {
-		// Your Code Here
+	// Your Code Here
     }
 
     public override string GetModName()
