@@ -53,8 +53,6 @@ public class JustAnotherRoundsLibrary : BaseUnityPlugin
         {
             TabinfoInterface.SetUpTabinfoInterface();
         }
-
-        ArmorFramework.SetupNetworkEvent();
     }
 
     void Update()

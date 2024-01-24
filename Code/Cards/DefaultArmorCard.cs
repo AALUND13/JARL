@@ -2,6 +2,7 @@
 using JARL.ArmorFramework.Classes;
 using JARL.ArmorFramework.Utlis;
 using JARL.Extensions;
+using Photon.Pun;
 using UnityEngine;
 
 namespace JARL
@@ -18,8 +19,7 @@ namespace JARL
         public float reactivateArmorValue;
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            
-            ArmorHandlerExtensions.AddArmor(player.playerID, "Default", maxArmorValue, regenerationRate, regenCooldownSeconds, armorReactivateType, reactivateArmorValue);
+            player.data.GetAdditionalData().armorHandler.AddArmor("Default", maxArmorValue, regenerationRate, regenCooldownSeconds, armorReactivateType, reactivateArmorValue);
         }
 
         public override string GetModName()

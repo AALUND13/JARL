@@ -3,9 +3,11 @@ using JARL.ArmorFramework.Classes;
 using JARL.ArmorFramework.Utlis;
 using JARL.Extensions;
 using ModsPlus;
+using Photon.Pun;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnboundLib;
 using UnboundLib.Extensions;
 using UnityEngine;
 
@@ -308,5 +310,45 @@ namespace JARL.ArmorFramework
             armorHeathBars.Clear();
         }
 
+        [PunRPC]
+        public void AddArmorRPC(string armorType, float maxArmorValue, float regenerationRate, float regenCooldownSeconds, ArmorReactivateType reactivateArmorType, float reactivateArmorValue)
+        {
+            ArmorBase armor = ArmorUtils.GetArmorByType(this, armorType);
+
+            armor.maxArmorValue += Mathf.Max(maxArmorValue, 0);
+            armor.armorRegenerationRate += Mathf.Max(regenerationRate, 0);
+
+            if (armor.armorRegenCooldownSeconds < regenCooldownSeconds)
+            {
+                armor.armorRegenCooldownSeconds = regenCooldownSeconds;
+            }
+
+
+
+            if (reactivateArmorType != ArmorReactivateType.Null)
+            {
+                armor.reactivateArmorType = reactivateArmorType;
+            }
+
+            armor.reactivateArmorValue = reactivateArmorValue;
+        }
+
+
+        /// <summary>
+        /// Adds armor to a specific armor type within the provided ArmorHandler, incorporating custom regeneration and reactivation settings.
+        /// </summary>
+        /// <param name="armorType">The type of armor to be added.</param>
+        /// <param name="maxArmorValue">The maximum armor value to be added.</param>
+        /// <param name="regenerationRate">The armor regeneration rate.</param>
+        /// <param name="regenCooldownSeconds">The cooldown for armor regeneration.</param>
+        /// <param name="reactivateArmorType">The reactivation type of armor.</param>
+        /// <param name="reactivateArmorValue">The reactivation value of armor.</param>
+        public void AddArmor(string armorType, float maxArmorValue, float regenerationRate, float regenCooldownSeconds, ArmorReactivateType reactivateArmorType, float reactivateArmorValue)
+        {
+            if (PhotonNetwork.OfflineMode || PhotonNetwork.IsMasterClient)
+            {
+                player.data.view.RPC("AddArmorRPC", RpcTarget.All, armorType, maxArmorValue, regenerationRate, regenCooldownSeconds, reactivateArmorType, reactivateArmorValue);
+            }
+        }
     }
 }
