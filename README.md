@@ -3,11 +3,13 @@
 # JARL (Just Another Rounds Library) 1.0.0
 JARL (Just Another Rounds Library) is a versatile toolkit that introduces a `Armor Framework` and provides utilities like `CustomCardUnity` to streamline the creation of custom cards in Unity.
 
+Feel free send your suggestions or bug report in [issues](https://github.com/AALUND13/JARL/issues) tab.
+
 # Features
 
 - **Armor Framework**: JARL integrates a flexible Armor Framework, empowering developers to craft their own armor or incorporate methods into armors created by other developers. This is achieved through the utilization of `DamageProcessingMethodsAfter` and `DamageProcessingMethodsBefore`, allowing for extensive customization.
   
--  **Custom Card Unity**: JARL also includes CustomCard for Unity, an class that can be inherited to create custom cards within the Unity environment.
+-  **Custom Card Unity**: JARL also includes CustomCard for Unity, a class that can be inherited to create custom cards within the Unity environment.
 # Usage
 ## Armor Framework
 
