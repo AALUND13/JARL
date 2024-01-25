@@ -16,11 +16,6 @@ namespace JARL.ArmorFramework.Builtin
             return new BarColor(Color.cyan * 0.6f, Color.cyan * 0.45f);
         }
 
-        public override int GetPriority()
-        {
-            return 0;
-        }
-
         public override void SetupArmor()
         {
             armorTags.Add("CanArmorPierce");

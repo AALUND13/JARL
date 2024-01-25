@@ -6,6 +6,7 @@ using Photon.Realtime;
 using System.Collections.Generic;
 using System.Linq;
 using UnboundLib;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace JARL.ArmorFramework
@@ -31,16 +32,19 @@ namespace JARL.ArmorFramework
                 return;
             }
 
-            if (registeredArmorTypes.Any(armor => armor.GetPriority() == armorType.GetPriority()))
+            // Ensure each armor type has a unique priority
+            while (registeredArmorTypes.Any(armor => armor.priority == armorType.priority))
             {
-                Utils.LogWarn($"Another ArmorType with the same priority already exists");
-                return;
+                armorType.priority++;
             }
 
             registeredArmorTypes.Add(armorType);
 
-            Utils.LogInfo($"Successfully register ArmorType: '{armorType.GetArmorType()}'");
+            RegisterArmorTabinfoInterface(armorType);
+
+            Utils.LogInfo($"Successfully registered ArmorType: '{armorType.GetArmorType()}'");
         }
+
 
         /// <summary>
         /// Resets the armor statistics for each player in the game, initializing the associated ArmorHandler if not present.
@@ -63,29 +67,12 @@ namespace JARL.ArmorFramework
             }
         }
 
-        internal static void SetupNetworkEvent()
+        internal static void RegisterArmorTabinfoInterface(ArmorBase armor)
         {
-            NetworkingManager.RegisterEvent("AddArmor", (data) =>
+            if (JustAnotherRoundsLibrary.plugins.Exists(plugin => plugin.Info.Metadata.GUID == "com.willuwontu.rounds.tabinfo"))
             {
-                ArmorBase armor = ArmorUtils.GetArmorByType(PlayerManager.instance.players.Find(player => player.playerID == (int)data[0]).GetComponent<ArmorHandler>(), (string)data[1]);
-
-                armor.maxArmorValue += Mathf.Max((float)data[2], 0);
-                armor.armorRegenerationRate += Mathf.Max((float)data[3], 0);
-
-                if (armor.armorRegenCooldownSeconds < (float)data[4])
-                {
-                    armor.armorRegenCooldownSeconds = (float)data[4];
-                }
-
-
-
-                if ((ArmorReactivateType)data[5] != ArmorReactivateType.Null)
-                {
-                    armor.reactivateArmorType = (ArmorReactivateType)data[5];
-                }
-
-                armor.reactivateArmorValue = (float)data[6];
-            });
+                TabinfoInterface.RegisterArmorTabinfoInterface(armor);
+            }
         }
     }
 }

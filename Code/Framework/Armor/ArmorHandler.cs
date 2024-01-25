@@ -186,7 +186,7 @@ namespace JARL.ArmorFramework
                 armors.Add(cloneArmor);
             }
 
-            armors = armors.OrderByDescending(armor => armor.GetPriority()).ToList();
+            armors = armors.OrderByDescending(armor => armor.priority).ToList();
         }
 
         /// <summary>
@@ -276,10 +276,11 @@ namespace JARL.ArmorFramework
 
         private void ResetArmorHealthBar()
         {
+            Utils.LogInfo("Reseting all armor health bars");
             DestroyAllArmorHealthBar();
 
             float offsetMultiplier = 1;
-            List<ArmorBase> @activeArmors = this.GetActiveArmors().OrderBy(bar => bar.GetPriority()).ToList();
+            List<ArmorBase> @activeArmors = this.GetActiveArmors().OrderBy(armors => armors.priority).ToList();
             foreach (ArmorBase armor in @activeArmors)
             {
                 AddArmorHealthBar(armor, offsetMultiplier);
@@ -289,7 +290,7 @@ namespace JARL.ArmorFramework
 
         private void AddArmorHealthBar(ArmorBase armor, float offsetMultiplier)
         {
-            GameObject healthBarWithArmor = new GameObject($"{armor.GetArmorType()} Health Bar");
+            GameObject healthBarWithArmor = new GameObject($"{armor.GetArmorType()} Armor Health Bar");
             healthBarWithArmor.transform.SetParent(player.GetComponentInChildren<PlayerWobblePosition>().transform);
 
             CustomHealthBar ArmorHealthBar = healthBarWithArmor.AddComponent<CustomHealthBar>();
@@ -298,13 +299,18 @@ namespace JARL.ArmorFramework
             ArmorHealthBar.transform.localScale = Vector3.one;
 
             armorHeathBars.Add(new HealthBarObjectWithArmor(healthBarWithArmor, armor));
+
+            Utils.LogInfo($"Added {healthBarWithArmor.name}");
         }
 
         private void DestroyAllArmorHealthBar()
         {
+            Utils.LogInfo("Destroying all armor health bars");
+
             foreach (HealthBarObjectWithArmor obj in armorHeathBars)
             {
-                GameObject.Destroy(obj.healthBarObject);
+                Utils.LogInfo($"Destroy {obj.healthBarObject.name}");
+                Destroy(obj.healthBarObject);
             }
 
             armorHeathBars.Clear();
@@ -313,23 +319,38 @@ namespace JARL.ArmorFramework
         [PunRPC]
         public void AddArmorRPC(string armorType, float maxArmorValue, float regenerationRate, float regenCooldownSeconds, ArmorReactivateType reactivateArmorType, float reactivateArmorValue)
         {
+            // Get the armor instance based on the specified armor type
             ArmorBase armor = ArmorUtils.GetArmorByType(this, armorType);
 
+            // If the armor instance is null, exit the method
+            if (armor == null)
+            {
+                Utils.LogError($"Failed to add armor. Armor type '{armorType}' not found.");
+                return;
+            }
+
+            // Log the addition of armor
+            Utils.LogInfo($"Adding armor '{armorType}' with max value {maxArmorValue}, regeneration rate {regenerationRate}, and reactivation value {reactivateArmorValue}");
+
+            // Add or update the maximum armor value
             armor.maxArmorValue += Mathf.Max(maxArmorValue, 0);
+
+            // Add or update the armor regeneration rate
             armor.armorRegenerationRate += Mathf.Max(regenerationRate, 0);
 
+            // Update the armor regeneration cooldown if it's shorter than the provided cooldown
             if (armor.armorRegenCooldownSeconds < regenCooldownSeconds)
             {
                 armor.armorRegenCooldownSeconds = regenCooldownSeconds;
             }
 
-
-
+            // Set the reactivation armor type if it's not null
             if (reactivateArmorType != ArmorReactivateType.Null)
             {
                 armor.reactivateArmorType = reactivateArmorType;
             }
 
+            // Set the reactivation armor value
             armor.reactivateArmorValue = reactivateArmorValue;
         }
 
@@ -347,6 +368,7 @@ namespace JARL.ArmorFramework
         {
             if (PhotonNetwork.OfflineMode || PhotonNetwork.IsMasterClient)
             {
+                Utils.LogInfo("Calling method 'AddArmorRPC' on all clients");
                 player.data.view.RPC("AddArmorRPC", RpcTarget.All, armorType, maxArmorValue, regenerationRate, regenCooldownSeconds, reactivateArmorType, reactivateArmorValue);
             }
         }

@@ -2,6 +2,7 @@
 using ClassesManagerReborn.Util;
 using System.Collections.Generic;
 using System.Linq;
+using UnboundLib;
 using UnboundLib.Cards;
 using UnityEngine;
 

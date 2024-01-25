@@ -28,12 +28,6 @@ namespace JARL.ArmorFramework.Abstract
         /// <returns>Returns the color that the armor bar should be.</returns>
         public abstract BarColor GetBarColor();
 
-        /// <summary>
-        /// Abstract method to get the priority of the armor.
-        /// </summary>
-        /// <returns>Returns an integer representing the priority of the armor.</returns>
-        public abstract int GetPriority();
-
         // Properties for a list of tags
         public List<string> armorTags = new List<string>();
 
@@ -60,6 +54,10 @@ namespace JARL.ArmorFramework.Abstract
 
         // Indicates whether armor should fully regenerate after revive.
         public bool regenerateFullyAfterRevive = true;
+
+        // The priority of the armor.
+        // Higher priority values indicate armor types that take precedence over others.
+        public int priority = 0;
 
         // The "ArmorHandler" that this armor bind too
         public ArmorHandler armorHandler;

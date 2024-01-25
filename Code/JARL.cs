@@ -24,8 +24,8 @@ public class JustAnotherRoundsLibrary : BaseUnityPlugin
     internal const string modInitials = "JARL";
     internal const string ModId = "com.aalund13.rounds.jarl";
     internal const string ModName = "Just Another Rounds Library";
-    internal const string Version = "1.0.2"; // What version are we on (major.minor.patch)?
-    internal static List<BaseUnityPlugin> plugins;
+    internal const string Version = "1.2.0"; // What version are we on (major.minor.patch)?
+    public static List<BaseUnityPlugin> plugins;
 
     internal static AssetBundle assets = Jotunn.Utils.AssetUtils.LoadAssetBundleFromResources("jarl_asset", typeof(JustAnotherRoundsLibrary).Assembly);
 
@@ -42,17 +42,19 @@ public class JustAnotherRoundsLibrary : BaseUnityPlugin
     }
     void Start()
     {
+        ConfigHandler.RegesterMenu(Config);
+
         plugins = (List<BaseUnityPlugin>)typeof(BepInEx.Bootstrap.Chainloader).GetField("_plugins", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
 
         UnboundLib.GameModes.GameModeManager.AddHook(UnboundLib.GameModes.GameModeHooks.HookGameStart, (_) => GameStart());
-
-        ArmorFramework.RegisterArmorType(new DefaultArmor());
-        ArmorHandler.DamageProcessingMethodsAfter.Add("ApplyArmorPiercePercent", ArmorPiercePercent.ApplyArmorPiercePercent);
 
         if (plugins.Exists(plugin => plugin.Info.Metadata.GUID == "com.willuwontu.rounds.tabinfo"))
         {
             TabinfoInterface.SetUpTabinfoInterface();
         }
+
+        ArmorFramework.RegisterArmorType(new DefaultArmor());
+        ArmorHandler.DamageProcessingMethodsAfter.Add("ApplyArmorPiercePercent", ArmorPiercePercent.ApplyArmorPiercePercent);
     }
 
     void Update()
