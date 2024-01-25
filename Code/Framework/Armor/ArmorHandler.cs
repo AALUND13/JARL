@@ -66,6 +66,7 @@ namespace JARL.ArmorFramework
             {
                 Utils.LogInfo($"Armor '{armor.GetArmorType()}' passed all reactivation checks. Reactivating...");
                 armor.isActive = true;
+                armor.OnReactivate();
             }
         }
 

@@ -132,24 +132,17 @@ namespace JARL.ArmorFramework.Abstract
         /// <summary>
         /// Method called during each frame update. Can be overridden in derived classes for custom behavior.
         /// </summary>
-        public virtual void OnUpdate()
-        {
-
-        }
+        public virtual void OnUpdate() { }
 
         /// <summary>
-        /// Invoked when this armor instance is added to the list of active armors ("activeArmors").
+        /// Invoked when the player respawn.
         /// </summary>
-        public virtual void OnArmorAdded()
-        {
+        public virtual void OnRespawn() { }
 
-        }
-
-
-        public virtual void OnRespawn()
-        {
-
-        }
+        /// <summary>
+        /// Invoked when this armor Reactivate
+        /// </summary>
+        public virtual void OnReactivate() { }
 
         public ArmorBase() { SetupArmor(); }
     }
