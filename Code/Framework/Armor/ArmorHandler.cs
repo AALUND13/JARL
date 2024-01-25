@@ -318,7 +318,7 @@ namespace JARL.ArmorFramework
         }
 
         [PunRPC]
-        public void AddArmorRPC(string armorType, float maxArmorValue, float regenerationRate, float regenCooldownSeconds, ArmorReactivateType reactivateArmorType, float reactivateArmorValue)
+        public void RPCA_AddArmor(string armorType, float maxArmorValue, float regenerationRate, float regenCooldownSeconds, ArmorReactivateType reactivateArmorType, float reactivateArmorValue)
         {
             // Get the armor instance based on the specified armor type
             ArmorBase armor = ArmorUtils.GetArmorByType(this, armorType);
@@ -369,8 +369,8 @@ namespace JARL.ArmorFramework
         {
             if (PhotonNetwork.OfflineMode || PhotonNetwork.IsMasterClient)
             {
-                Utils.LogInfo("Calling method 'AddArmorRPC' on all clients");
-                player.data.view.RPC("AddArmorRPC", RpcTarget.All, armorType, maxArmorValue, regenerationRate, regenCooldownSeconds, reactivateArmorType, reactivateArmorValue);
+                Utils.LogInfo("Calling method 'RPCA_AddArmor' on all clients");
+                player.data.view.RPC("RPCA_AddArmor", RpcTarget.All, armorType, maxArmorValue, regenerationRate, regenCooldownSeconds, reactivateArmorType, reactivateArmorValue);
             }
         }
     }
