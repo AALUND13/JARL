@@ -4,7 +4,6 @@ using JARL.ArmorFramework.Utlis;
 using JARL.Extensions;
 using TabInfo.Utils;
 using UnboundLib;
-using UnityEditor.VersionControl;
 
 namespace JARL
 {
@@ -28,7 +27,8 @@ namespace JARL
             if (JustAnotherRoundsLibrary.plugins.Exists(plugin => plugin.Info.Metadata.GUID == "com.willuwontu.rounds.tabinfo"))
             {
                 string armorType = registerArmor.GetArmorType();
-                TabInfoManager.RegisterStat((StatCategory)armorsStatsCategory, $"{armorType} Armor", (p) => p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).maxArmorValue > 0, (p) => {
+                TabInfoManager.RegisterStat((StatCategory)armorsStatsCategory, $"{armorType} Armor", (p) => p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).maxArmorValue > 0, (p) =>
+                {
                     ArmorBase armor = p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType);
                     if (armor.currentArmorValue <= 0 && !armor.deactivateText.IsNullOrWhiteSpace())
                     {

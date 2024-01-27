@@ -12,10 +12,18 @@ namespace JARL.Abstract
     {
         [Header("Class Value")]
         public bool automatedlyCreateClass = true;
-
+        private bool CreatedClassText = false;
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            CreateClassText();
+            
+        }
+
+        private void Update()
+        {
+            if (!CreatedClassText)
+            {
+                CreateClassText();
+            }
         }
 
         private class SetLocalPos : MonoBehaviour
@@ -89,6 +97,7 @@ namespace JARL.Abstract
                     ClassNameMono classNameMono = gameObject.AddComponent<ClassNameMono>();
                     classNameMono.className = className;
                 }
+                CreatedClassText = true;
             }
         }
 
