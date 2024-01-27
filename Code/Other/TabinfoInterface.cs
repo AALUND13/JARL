@@ -36,7 +36,7 @@ namespace JARL
                     }
                     else
                     {
-                        return $"{armor.currentArmorValue}/{armor.maxArmorValue}";
+                        return $"{armor.currentArmorValue:0.0}/{armor.maxArmorValue:0.0}";
                     }
                 });
 
