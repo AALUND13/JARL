@@ -118,6 +118,9 @@ namespace JARL.ArmorFramework
                 Utils.LogInfo($"Runing 'OnArmorDamage' method for '{armor.GetArmorType()}'");
                 try
                 {
+                    // Attempt to called "OnArmorDamage" method
+                    armor.OnArmorDamage(remainingDamage, damagingPlayer);
+
                     // Attempt to calculate the armor and damage based on the incoming damage
                     armorAndDamage = armor.OnDamage(remainingDamage, damagingPlayer);
 
@@ -131,8 +134,6 @@ namespace JARL.ArmorFramework
 
                     // Update the time since the last damage for the current armor
                     armor.timeSinceLastDamage = Time.time;
-
-                    armor.OnArmorDamage(remainingDamage, damagingPlayer);
                 }
                 catch (Exception ex)
                 {
