@@ -68,7 +68,7 @@ MonoBehaviour:
     stat: Regeneration Rate
   - positive: 0
     amount: -10%
-    simepleAmount: 0
+    simepleAmount: 5
     stat: Health
   rarity: 1
   cardArt: {fileID: 0}
@@ -300,9 +300,7 @@ MonoBehaviour:
   cardStats: {fileID: 0}
   statModifiers: {fileID: 0}
   block: {fileID: 0}
-  isClass: 0
-  showCardClassName: 0
-  className: 
+  automatedlyCreateClass: 1
   maxArmorValue: 50
   regenerationRate: 5
   regenCooldownSeconds: 5
