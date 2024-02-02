@@ -58,7 +58,7 @@ MonoBehaviour:
     amount: +25%
     simepleAmount: 2
     stat: Armor Pierrce
-  rarity: 0
+  rarity: 1
   cardArt: {fileID: 0}
   sprite: {fileID: 21300000, guid: 5b742d082ddefaa489468fac5e1e3bff, type: 2}
   sourceCard: {fileID: 0}
@@ -288,7 +288,5 @@ MonoBehaviour:
   cardStats: {fileID: 0}
   statModifiers: {fileID: 0}
   block: {fileID: 0}
-  isClass: 0
-  showCardClassName: 0
-  className: 
+  automatedlyCreateClass: 1
   ArmorPiercePercent: 0.25
