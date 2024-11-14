@@ -1,5 +1,5 @@
 ﻿using BepInEx;
-using JARL.ArmorFramework.Abstract;
+using JARL.ArmorFramework.Bases;
 using JARL.ArmorFramework.Utlis;
 using JARL.Extensions;
 using TabInfo.Utils;
@@ -42,15 +42,15 @@ namespace JARL
 
 
                 StatCategory armorStatsCategory = TabInfoManager.RegisterCategory($"{armorType} Armor Stats", 127);
-                TabInfoManager.RegisterStat(armorStatsCategory, $"{armorType} Armor Health", (p) => p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).maxArmorValue > 0 && Utils.DetailsMode,
+                TabInfoManager.RegisterStat(armorStatsCategory, $"{armorType} Armor Health", (p) => p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).maxArmorValue > 0 && ConfigHandler.DetailsMode.Value,
                     (p) => $"{p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).currentArmorValue:0.0}/{p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).maxArmorValue:0.0}");
-                TabInfoManager.RegisterStat(armorStatsCategory, $"{armorType} Armor Regeneration Rate", (p) => p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).maxArmorValue > 0 && Utils.DetailsMode,
+                TabInfoManager.RegisterStat(armorStatsCategory, $"{armorType} Armor Regeneration Rate", (p) => p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).maxArmorValue > 0 && ConfigHandler.DetailsMode.Value,
                     (p) => $"{p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).armorRegenerationRate:0.00}");
-                TabInfoManager.RegisterStat(armorStatsCategory, $"{armorType} Armor Regen Cooldown ", (p) => p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).maxArmorValue > 0 && Utils.DetailsMode,
+                TabInfoManager.RegisterStat(armorStatsCategory, $"{armorType} Armor Regen Cooldown ", (p) => p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).maxArmorValue > 0 && ConfigHandler.DetailsMode.Value,
                     (p) => $"{p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).armorRegenCooldownSeconds:0.00}s");
-                TabInfoManager.RegisterStat(armorStatsCategory, $"{armorType} Armor Reactivate Armor Type", (p) => p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).maxArmorValue > 0 && Utils.DetailsMode,
+                TabInfoManager.RegisterStat(armorStatsCategory, $"{armorType} Armor Reactivate Armor Type", (p) => p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).maxArmorValue > 0 && ConfigHandler.DetailsMode.Value,
                     (p) => $"{p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).reactivateArmorType}");
-                TabInfoManager.RegisterStat(armorStatsCategory, $"{armorType} Armor Reactivate Armor Value", (p) => p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).maxArmorValue > 0 && Utils.DetailsMode,
+                TabInfoManager.RegisterStat(armorStatsCategory, $"{armorType} Armor Reactivate Armor Value", (p) => p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).maxArmorValue > 0 && ConfigHandler.DetailsMode.Value,
                     (p) => $"{p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).reactivateArmorValue}");
             }
         }

@@ -1,4 +1,4 @@
-﻿using JARL.ArmorFramework.Abstract;
+﻿using JARL.ArmorFramework.Bases;
 using JARL.ArmorFramework.Classes;
 using JARL.ArmorFramework.Utlis;
 using JARL.Extensions;

@@ -1,4 +1,4 @@
-﻿using JARL.ArmorFramework.Abstract;
+﻿using JARL.ArmorFramework.Bases;
 using UnityEngine;
 
 namespace JARL.ArmorFramework.Classes

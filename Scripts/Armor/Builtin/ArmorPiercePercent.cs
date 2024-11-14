@@ -2,7 +2,7 @@
 using JARL.Extensions;
 using System;
 
-namespace JARL.ArmorFramework.Abstract.Builtin
+namespace JARL.ArmorFramework.Bases.Builtin
 {
     public class ArmorPiercePercent
     {

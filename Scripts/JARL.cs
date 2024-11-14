@@ -3,7 +3,7 @@ using ClassesManagerReborn;
 using HarmonyLib;
 using JARL;
 using JARL.ArmorFramework;
-using JARL.ArmorFramework.Abstract.Builtin;
+using JARL.ArmorFramework.Bases.Builtin;
 using JARL.ArmorFramework.Builtin;
 using JARL.Extensions;
 using System.Collections;

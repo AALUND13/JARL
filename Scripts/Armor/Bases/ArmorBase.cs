@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace JARL.ArmorFramework.Abstract
+namespace JARL.ArmorFramework.Bases
 {
     /// <summary>
     /// Represents an abstract class for armor.
