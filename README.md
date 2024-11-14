@@ -14,39 +14,30 @@ Feel free send your suggestions or bug report in [issues](https://github.com/AAL
 ### Creating a Armor Type
 You can create an armor type by inheriting from the `ArmorBase` class. Here is an example of an armor type:
 ```csharp
-public class ExampleArmor : ArmorBase
-{
-    public override string GetArmorType()
-    {
-        return "Example";
-    }
-
-    public override BarColor GetBarColor()
-    {
+public class ExampleArmor : ArmorBase {
+    public override BarColor GetBarColor() {
         return new BarColor(Color.cyan * 0.6f, Color.cyan * 0.45f);
     }
 
-    public override void SetupArmor()
-    {
+    public override void SetupArmor() {
         armorTags.Add("CanArmorPierce");
         reactivateArmorType = ArmorReactivateType.Second;
     }
 }
 ```
+The base class `ArmorBase` has a lot of methods/properties that you can change/override to customize your armor. Take a look at the `ArmorBase` class to see all the methods/properties that you can change/override.
 #### Registering Armor
 After creating your armor, you can register it using the `RegisterArmorType` method from the `ArmorFramework` class:
 ```csharp
-void Start()
-{
+void Start() {
 	ArmorFramework.RegisterArmorType(new ExampleArmor());
 }
 ``` 
 #### Adding Armor To Players
 You can add armor to a player, for example, when a player picks a card, by using the `AddArmor` method from the `ArmorHandler` class:
 ```csharp
-public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
-{
-    player.data.GetAdditionalData().armorHandler.AddArmor("Example", 50, 5, 5, ArmorReactivateType.Second, 5);
+public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats) {
+    ArmorFramework.armorHandlers[player].AddArmor(typeof(ExampleArmor), 50, 5, 5, ArmorReactivateType.Second, 5);
 }
 ```
 ## Custom Card Unity

@@ -1,24 +1,23 @@
-﻿using JARL.Bases;
-using JARL.ArmorFramework.Classes;
-using JARL.Extensions;
+﻿using JARL.Armor;
+using JARL.Armor.Builtin;
+using JARL.Bases;
 using UnityEngine;
-
-namespace JARL {
+namespace JARL.Cards {
     public class DefaultArmorCard : CustomCardUnity {
         [Header("Armor: Max Armor Amd Regen")]
-        public float maxArmorValue;
-        public float regenerationRate;
-        public float regenCooldownSeconds;
+        public float MaxArmorValue;
+        public float RegenerationRate;
+        public float RegenCooldownSeconds;
 
         [Header("Armor: Armor Reactivate")]
-        public ArmorReactivateType armorReactivateType;
-        public float reactivateArmorValue;
+        public ArmorReactivateType ArmorReactivateType;
+        public float ReactivateArmorValue;
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats) {
-            player.data.GetAdditionalData().armorHandler.AddArmor("Default", maxArmorValue, regenerationRate, regenCooldownSeconds, armorReactivateType, reactivateArmorValue);
+            ArmorFramework.ArmorHandlers[player].AddArmor(typeof(DefaultArmor), MaxArmorValue, RegenerationRate, RegenCooldownSeconds, ArmorReactivateType, ReactivateArmorValue);
         }
 
         public override string GetModName() {
-            return JustAnotherRoundsLibrary.modInitials;
+            return JustAnotherRoundsLibrary.ModInitials;
         }
     }
 }

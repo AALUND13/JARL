@@ -12,7 +12,7 @@ namespace JARL {
         }
 
         public override string GetModName() {
-            return JustAnotherRoundsLibrary.modInitials;
+            return JustAnotherRoundsLibrary.ModInitials;
         }
     }
 }

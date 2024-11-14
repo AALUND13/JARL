@@ -1,139 +1,90 @@
-﻿using JARL.ArmorFramework.Classes;
-using JARL.ArmorFramework.Utlis;
-using System;
+﻿using JARL.Armor.Utlis;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace JARL.ArmorFramework.Bases {
-    /// <summary>
-    /// Represents an abstract class for armor.
-    /// </summary>
-    public abstract class ArmorBase : ICloneable {
-        public object Clone() {
-            return MemberwiseClone();
-        }
-
-        /// <summary>
-        /// Abstract method to get the type of the armor.
-        /// </summary>
-        /// <returns>Returns the string representing the armor type.</returns>
-        public abstract string GetArmorType();
-
-        /// <summary>
-        /// Abstract method to get the color of the armor bar.
-        /// </summary>
-        /// <returns>Returns the color that the armor bar should be.</returns>
+namespace JARL.Armor.Bases {
+    public abstract class ArmorBase {
         public abstract BarColor GetBarColor();
 
-        // Properties for a list of tags
-        public List<string> armorTags = new List<string>();
+        public ArmorDamagePatchType ArmorDamagePatch = ArmorDamagePatchType.TakeDamage | ArmorDamagePatchType.TakeDamageOverTime;
 
-        // Maximum and current armor values
-        public float maxArmorValue = 0; // Maximum armor value
-        public float currentArmorValue = 0; // Current armor value
+        public List<string> ArmorTags = new List<string>();
 
-        // Properties for armor regeneration and cooldown
-        public float armorRegenerationRate = 0; // Rate at which armor regenerates
-        public float armorRegenCooldownSeconds = 0; // Time in seconds before armor regeneration reactivates after taking damage
+        public float MaxArmorValue = 0;
+        public float CurrentArmorValue = 0;
 
-        // Properties for armor reactivation
-        public ArmorReactivateType reactivateArmorType = ArmorReactivateType.Percent; // Type of reactivation (percentage or time interval)
+
+        public float ArmorRegenerationRate = 0;
+        public float ArmorRegenCooldownSeconds = 0;
+
+        public ArmorReactivateType? reactivateArmorType = ArmorReactivateType.Percent; // Type of reactivation (percentage or time interval)
         public float reactivateArmorValue = 0; // Value for armor reactivation (leave at 0 for instant reactivation)
 
-        // Properties for deactivate text
-        public string deactivateText = ""; // Text to display when armor is deactivated (leave empty to display 0)
+        public bool IsActive { get; internal set; }
+        public string DeactivateText = "";
 
-        // Indicates whether the armor is currently active.
-        public bool isActive = false;
-
-        // Represents the time elapsed since the last damage was taken.
-        public float timeSinceLastDamage = 0;
-
-        // Indicates whether armor should fully regenerate after revive.
-        public bool regenerateFullyAfterRevive = true;
-
-        // The priority of the armor.
-        // Higher priority values indicate armor types that take precedence over others.
-        public int priority = 0;
-
-        // The "ArmorHandler" that this armor bind too
-        public ArmorHandler armorHandler;
-
-        /// <summary>
-        /// Processes damage inflicted on the armor, taking the current armor value into account.
-        /// Override this method in derived classes to implement custom armor damage calculations.
-        /// </summary>
-        /// <param name="damage">The incoming damage to be processed.</param>
-        /// <param name="DamagingPlayer">The player dealing the damage.</param>
-        /// <returns>The result of damage and armor processing, including the modified damage and armor values.</returns>
-        public virtual DamageAndArmorResult OnDamage(float damage, Player DamagingPlayer) {
-            return ArmorUtils.ApplyDamage(currentArmorValue, damage);
+        public bool disable;
+        public bool Disable {
+            get => disable;
+            set {
+                disable = value;
+                if(value) {
+                    IsActive = false;
+                } else {
+                    LastStateChangeTime = Time.time;
+                    IsActive = true;
+                }
+            }
         }
 
-        public virtual void OnArmorDamage(float damage, Player DamagingPlayer) {
+        public float LastStateChangeTime { get; internal set; }
 
-        }
+        public bool RegenerateFullyAfterRevive = true;
 
-        /// <summary>
-        /// Sets up any initial configuration for the armor. Override this method in derived classes to implement specific setup logic.
-        /// </summary>
-        public virtual void SetupArmor() { }
 
-        /// <summary>
-        /// Checks if the armor has a specified tag.
-        /// </summary>
-        /// <param name="armorTag">The tag to check for.</param>
-        /// <returns>True if the armor has the specified tag; otherwise, false.</returns>
+        public int Priority = 0;
+
+        public ArmorHandler ArmorHandler { get; internal set; }
+
         public bool HasArmorTag(string armorTag) {
-            return armorTags.Contains(armorTag);
+            return ArmorTags.Contains(armorTag);
         }
 
-        /// <summary>
-        /// Heals the armor by the specified amount, ensuring the armor value does not exceed the maximum.
-        /// </summary>
-        /// <param name="healValue">The amount to heal the armor.</param>
-        /// <returns>The updated current armor value.</returns>
         public float HealArmor(float healValue) {
-            currentArmorValue = Mathf.Clamp(currentArmorValue + healValue, 0, maxArmorValue);
-            return currentArmorValue;
+            CurrentArmorValue = Mathf.Clamp(CurrentArmorValue + healValue, 0, MaxArmorValue);
+            return CurrentArmorValue;
         }
 
-        /// <summary>
-        /// Damages the armor by the specified amount, ensuring the armor value does not go below zero.
-        /// </summary>
-        /// <param name="damageValue">The amount to damage the armor.</param>
-        /// <returns>The updated current armor value.</returns>
         public float DamageArmor(float damageValue) {
-            currentArmorValue = Mathf.Max(currentArmorValue - damageValue, 0);
-            OnArmorDamage(damageValue, null);
-            return currentArmorValue;
+            var DamageArmorInfo = OnDamage(damageValue, null, null);
+            CurrentArmorValue = DamageArmorInfo.Armor;
+            if(CurrentArmorValue <= 0)
+                IsActive = false;
+
+            LastStateChangeTime = Time.time;
+
+            return CurrentArmorValue;
         }
 
-        /// <summary>
-        /// Initiates the regeneration of armor over time.
-        /// </summary>
-        public void RegenerationArmor() {
-            if(Time.time > timeSinceLastDamage + armorRegenCooldownSeconds) {
-                float healValue = armorRegenerationRate * Time.deltaTime;
+        internal void RegenerationArmor() {
+            if(Time.time > LastStateChangeTime + ArmorRegenCooldownSeconds && !Disable) {
+                float healValue = ArmorRegenerationRate * Time.deltaTime;
                 HealArmor(healValue);
             }
         }
 
-        /// <summary>
-        /// Method called during each frame update. Can be overridden in derived classes for custom behavior.
-        /// </summary>
+        public virtual DamageArmorInfo OnDamage(float damage, Player DamagingPlayer, ArmorDamagePatchType? armorDamagePatchType) {
+            return ArmorUtils.ApplyDamage(CurrentArmorValue, damage);
+        }
+
         public virtual void OnUpdate() { }
 
-        /// <summary>
-        /// Invoked when the player respawn.
-        /// </summary>
         public virtual void OnRespawn() { }
 
-        /// <summary>
-        /// Invoked when this armor Reactivate
-        /// </summary>
         public virtual void OnReactivate() { }
 
-        public ArmorBase() { SetupArmor(); }
+        public override string ToString() {
+            return GetType().Name.Replace("Armor", "");
+        }
     }
 }

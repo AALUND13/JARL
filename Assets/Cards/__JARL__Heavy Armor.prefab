@@ -300,9 +300,9 @@ MonoBehaviour:
   cardStats: {fileID: 0}
   statModifiers: {fileID: 0}
   block: {fileID: 0}
-  automatedlyCreateClass: 1
-  maxArmorValue: 150
-  regenerationRate: 10
-  regenCooldownSeconds: 5
-  armorReactivateType: 1
-  reactivateArmorValue: 5
+  AutomatedlyCreateClass: 1
+  MaxArmorValue: 150
+  RegenerationRate: 10
+  RegenCooldownSeconds: 5
+  ArmorReactivateType: 1
+  ReactivateArmorValue: 5
