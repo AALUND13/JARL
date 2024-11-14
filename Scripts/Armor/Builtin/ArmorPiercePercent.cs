@@ -1,31 +1,16 @@
-﻿using JARL.ArmorFramework.Classes;
-using JARL.Extensions;
+﻿using JARL.Extensions;
 using System;
 
-namespace JARL.ArmorFramework.Bases.Builtin {
-    public class ArmorPiercePercent {
-        /// <summary>
-        /// Applies armor piercing percentage to the damage, considering the provided armor, damaging player, hurt player,
-        /// remaining damage, original damage, and flags indicating lethality and whether to ignore blocking effects.
-        /// </summary>
-        /// <param name="armor">The armor to consider for armor piercing.</param>
-        /// <param name="damageingPlayer">The player dealing the damage.</param>
-        /// <param name="hurtPlayer">The player receiving the damage.</param>
-        /// <param name="remaindingDamage">The remaining damage after initial reductions.</param>
-        /// <param name="Damage">The original damage amount.</param>
-        /// <returns>Modified damage and armor values.</returns>
-        public static DamageAndArmorResult ApplyArmorPiercePercent(ArmorBase armor, Player damageingPlayer, Player hurtPlayer, float remaindingDamage, float Damage) {
-            if(armor.armorTags.Contains("CanArmorPierce")) {
-                // Calculate the armor piercing percentage
-                float armorPiercePercent = (float)(damageingPlayer?.data?.GetAdditionalData()?.ArmorPiercePercent ?? 0);
-
-                // Apply armor piercing to the damage
+namespace JARL.Armor.Bases.Builtin {
+    internal class ArmorPiercePercent {
+        public static DamageArmorInfo ApplyArmorPiercePercent(ArmorBase armor, Player damageingPlayer, Player hurtPlayer, float remaindingDamage, float Damage) {
+            if(armor.ArmorTags.Contains("CanArmorPierce")) {
+                float armorPiercePercent = (float)(damageingPlayer?.data.GetAdditionalData().ArmorPiercePercent ?? 0);
                 float modifiedDamage = Math.Min(remaindingDamage + (Damage * armorPiercePercent), Damage);
 
-                // Return the modified damage and the original armor
-                return new DamageAndArmorResult(modifiedDamage, armor.currentArmorValue);
+                return new DamageArmorInfo(modifiedDamage, armor.CurrentArmorValue);
             } else {
-                return new DamageAndArmorResult(remaindingDamage, armor.currentArmorValue);
+                return new DamageArmorInfo(remaindingDamage, armor.CurrentArmorValue);
             }
         }
     }

@@ -1,62 +1,48 @@
-﻿using JARL.ArmorFramework.Bases;
+﻿using System;
 using UnityEngine;
 
-namespace JARL.ArmorFramework.Classes {
+namespace JARL.Armor {
+    [Flags]
+    public enum ArmorDamagePatchType {
+        DoDamage = 1 << 0,
+        TakeDamage = 1 << 1,
+        TakeDamageOverTime = 1 << 2
+    }
+
     public enum ArmorReactivateType {
         Percent, // Reactivate armor based on a percentage
-        Second,   // Reactivate armor based on a time interval
-        Null
+        Second   // Reactivate armor based on a time interval
     }
 
-    /// <summary>
-    /// Represents the result of damage and armor processing, including damage amount and armor value.
-    /// </summary>
-    public class DamageAndArmorResult {
-        public float damage;
-        public float armor;
+    public struct DamageArmorInfo {
+        public float Damage;
+        public float Armor;
 
-        public DamageAndArmorResult(float damage, float armor) {
-            this.damage = damage;
-            this.armor = armor;
+        public DamageArmorInfo(float damage, float armor) {
+            Damage = damage;
+            Armor = armor;
         }
     }
 
-    /// <summary>
-    /// Represents the result of armor processing, including damage amount, armor value, and a flag to skip armor damage processing.
-    /// </summary>
-    public class ArmorProcessingResult {
-        public float damage;
-        public float armor;
-        public bool skipArmorDamageProcess;
+    public struct ArmorProcessingResult {
+        public float Damage;
+        public float Armor;
+        public bool SkipArmorDamageProcess;
 
         public ArmorProcessingResult(float damage, float armor, bool skipArmorDamageProcess) {
-            this.damage = damage;
-            this.armor = armor;
-            this.skipArmorDamageProcess = skipArmorDamageProcess;
+            Damage = damage;
+            Armor = armor;
+            SkipArmorDamageProcess = skipArmorDamageProcess;
         }
     }
 
-    /// <summary>
-    /// Represents a combination of a health bar GameObject and an associated ArmorBase object.
-    /// Useful for pairing health bars with specific armor instances in a game environment.
-    /// </summary>
-    public class HealthBarObjectWithArmor {
-        public GameObject healthBarObject;
-        public ArmorBase armor;
-
-        public HealthBarObjectWithArmor(GameObject healthBarObject, ArmorBase armor) {
-            this.healthBarObject = healthBarObject;
-            this.armor = armor;
-        }
-    }
-
-    public class BarColor {
-        public Color activedBarColor;
-        public Color deactivatedBarColor;
+    public struct BarColor {
+        public Color ActivedBarColor;
+        public Color DeactivatedBarColor;
 
         public BarColor(Color activedBarColor, Color deactivatedBarColor) {
-            this.activedBarColor = activedBarColor;
-            this.deactivatedBarColor = deactivatedBarColor;
+            ActivedBarColor = activedBarColor;
+            DeactivatedBarColor = deactivatedBarColor;
         }
     }
 }

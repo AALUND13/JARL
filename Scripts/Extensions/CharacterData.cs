@@ -1,4 +1,4 @@
-﻿using JARL.ArmorFramework;
+﻿using JARL.Armor;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -8,14 +8,10 @@ namespace JARL.Extensions {
         public float totalMaxArmor;
         public float ArmorPiercePercent;
 
-        public ArmorHandler armorHandler;
-
         public JARLCharacterDataAdditionalData() {
             totalArmor = 0;
             totalMaxArmor = 0;
             ArmorPiercePercent = 0;
-
-            armorHandler = null;
         }
     }
 

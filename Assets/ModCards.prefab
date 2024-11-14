@@ -40,11 +40,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 299580984272778953}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67c63e9c241895f45a0aa4063137c321, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e47ba06f7ff05b4b97ede3f0763c888, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Cards:
-  - {fileID: 607836166059441451, guid: b552d0129b16b6d4b8645e338ff74117, type: 3}
-  - {fileID: 8153009682389993194, guid: 8b369b51d82db294c8a74439cd863b67, type: 3}
   - {fileID: 5329582374550628511, guid: 720b5aa97c25d274baa26912aa65da1f, type: 3}
+  - {fileID: 8153009682389993194, guid: 8b369b51d82db294c8a74439cd863b67, type: 3}
+  - {fileID: 607836166059441451, guid: b552d0129b16b6d4b8645e338ff74117, type: 3}
   HiddenCards: []
