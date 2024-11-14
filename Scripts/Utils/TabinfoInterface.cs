@@ -5,13 +5,10 @@ using JARL.Extensions;
 using TabInfo.Utils;
 using UnboundLib;
 
-namespace JARL
-{
-    internal class TabinfoInterface
-    {
+namespace JARL {
+    internal class TabinfoInterface {
         public static object armorsStatsCategory = null;
-        public static void SetUpTabinfoInterface()
-        {
+        public static void SetUpTabinfoInterface() {
             StatCategory JARLStatsCategory = TabInfoManager.RegisterCategory("JARL Stats", 0);
             ExtensionMethods.SetFieldValue(JARLStatsCategory, "priority", -45);
 
@@ -22,20 +19,14 @@ namespace JARL
             TabInfoManager.RegisterStat(JARLStatsCategory, "Armor Pierce", (p) => p.data.GetAdditionalData().ArmorPiercePercent > 0, (p) => $"{p.data.GetAdditionalData().ArmorPiercePercent * 100:0}%");
         }
 
-        public static void RegisterArmorTabinfoInterface(ArmorBase registerArmor)
-        {
-            if (JustAnotherRoundsLibrary.plugins.Exists(plugin => plugin.Info.Metadata.GUID == "com.willuwontu.rounds.tabinfo"))
-            {
+        public static void RegisterArmorTabinfoInterface(ArmorBase registerArmor) {
+            if(JustAnotherRoundsLibrary.plugins.Exists(plugin => plugin.Info.Metadata.GUID == "com.willuwontu.rounds.tabinfo")) {
                 string armorType = registerArmor.GetArmorType();
-                TabInfoManager.RegisterStat((StatCategory)armorsStatsCategory, $"{armorType} Armor", (p) => p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).maxArmorValue > 0, (p) =>
-                {
+                TabInfoManager.RegisterStat((StatCategory)armorsStatsCategory, $"{armorType} Armor", (p) => p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType).maxArmorValue > 0, (p) => {
                     ArmorBase armor = p.data.GetAdditionalData().armorHandler.GetArmorByType(armorType);
-                    if (armor.currentArmorValue <= 0 && !armor.deactivateText.IsNullOrWhiteSpace())
-                    {
+                    if(armor.currentArmorValue <= 0 && !armor.deactivateText.IsNullOrWhiteSpace()) {
                         return armor.deactivateText;
-                    }
-                    else
-                    {
+                    } else {
                         return $"{armor.currentArmorValue:0.0}/{armor.maxArmorValue:0.0}";
                     }
                 });

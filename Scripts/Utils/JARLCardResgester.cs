@@ -2,35 +2,28 @@
 using UnboundLib.Cards;
 using UnityEngine;
 
-namespace JARL
-{
-    public class JARLCardResgester : MonoBehaviour
-    {
+namespace JARL {
+    public class JARLCardResgester : MonoBehaviour {
         public List<GameObject> Cards;
         public List<GameObject> HiddenCards;
 
         internal static Dictionary<string, GameObject> ModCards = new Dictionary<string, GameObject>();
 
-        internal void RegisterCards()
-        {
-            foreach (var Card in Cards)
-            {
+        internal void RegisterCards() {
+            foreach(var Card in Cards) {
                 CustomCard.RegisterUnityCard(Card, JustAnotherRoundsLibrary.modInitials, Card.GetComponent<CardInfo>().cardName, true, null);
                 ModCards.Add(Card.GetComponent<CardInfo>().cardName, Card);
             }
-            foreach (var Card in HiddenCards)
-            {
+            foreach(var Card in HiddenCards) {
                 CustomCard.RegisterUnityCard(Card, JustAnotherRoundsLibrary.modInitials, Card.GetComponent<CardInfo>().cardName, false, null);
                 ModdingUtils.Utils.Cards.instance.AddHiddenCard(Card.GetComponent<CardInfo>());
                 ModCards.Add(Card.GetComponent<CardInfo>().cardName, Card);
             }
         }
 
-        internal static List<GameObject> GetCardsFormString(List<string> cardsOfString)
-        {
+        internal static List<GameObject> GetCardsFormString(List<string> cardsOfString) {
             List<GameObject> ModCardsObject = new List<GameObject>();
-            foreach (string Card in cardsOfString)
-            {
+            foreach(string Card in cardsOfString) {
                 ModCardsObject.Add(ModCards[Card]);
             }
             return ModCardsObject;

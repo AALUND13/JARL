@@ -5,7 +5,6 @@ using JARL;
 using JARL.ArmorFramework;
 using JARL.ArmorFramework.Bases.Builtin;
 using JARL.ArmorFramework.Builtin;
-using JARL.Extensions;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -19,8 +18,7 @@ using UnityEngine;
 [BepInPlugin(ModId, ModName, Version)]
 [BepInProcess("Rounds.exe")]
 
-public class JustAnotherRoundsLibrary : BaseUnityPlugin
-{
+public class JustAnotherRoundsLibrary : BaseUnityPlugin {
     internal const string modInitials = "JARL";
     internal const string ModId = "com.aalund13.rounds.jarl";
     internal const string ModName = "Just Another Rounds Library";
@@ -31,25 +29,22 @@ public class JustAnotherRoundsLibrary : BaseUnityPlugin
 
     public static CardCategory SoulstreakClassCards;
 
-    void Awake()
-    {
+    void Awake() {
         assets.LoadAsset<GameObject>("ModCards").GetComponent<JARLCardResgester>().RegisterCards();
-        
+
         var harmony = new Harmony(ModId);
         harmony.PatchAll();
 
         ClassesRegistry.Register(JARLCardResgester.ModCards["Armor Piercing"].GetComponent<CardInfo>(), CardType.NonClassCard, 4);
     }
-    void Start()
-    {
+    void Start() {
         ConfigHandler.RegesterMenu(Config);
 
         plugins = (List<BaseUnityPlugin>)typeof(BepInEx.Bootstrap.Chainloader).GetField("_plugins", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
-        
+
         UnboundLib.GameModes.GameModeManager.AddHook(UnboundLib.GameModes.GameModeHooks.HookGameStart, (_) => GameStart());
 
-        if (plugins.Exists(plugin => plugin.Info.Metadata.GUID == "com.willuwontu.rounds.tabinfo"))
-        {
+        if(plugins.Exists(plugin => plugin.Info.Metadata.GUID == "com.willuwontu.rounds.tabinfo")) {
             TabinfoInterface.SetUpTabinfoInterface();
         }
 
@@ -57,13 +52,11 @@ public class JustAnotherRoundsLibrary : BaseUnityPlugin
         ArmorHandler.DamageProcessingMethodsAfter.Add("ApplyArmorPiercePercent", ArmorPiercePercent.ApplyArmorPiercePercent);
     }
 
-    void Update()
-    {
+    void Update() {
         ArmorFramework.ResetEveryPlayerArmorStats(false);
     }
 
-    IEnumerator GameStart()
-    {
+    IEnumerator GameStart() {
         ArmorFramework.ResetEveryPlayerArmorStats();
         yield break;
     }

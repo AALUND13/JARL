@@ -4,15 +4,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace JARL.ArmorFramework.Bases
-{
+namespace JARL.ArmorFramework.Bases {
     /// <summary>
     /// Represents an abstract class for armor.
     /// </summary>
-    public abstract class ArmorBase : ICloneable
-    {
-        public object Clone()
-        {
+    public abstract class ArmorBase : ICloneable {
+        public object Clone() {
             return MemberwiseClone();
         }
 
@@ -69,13 +66,11 @@ namespace JARL.ArmorFramework.Bases
         /// <param name="damage">The incoming damage to be processed.</param>
         /// <param name="DamagingPlayer">The player dealing the damage.</param>
         /// <returns>The result of damage and armor processing, including the modified damage and armor values.</returns>
-        public virtual DamageAndArmorResult OnDamage(float damage, Player DamagingPlayer)
-        {
+        public virtual DamageAndArmorResult OnDamage(float damage, Player DamagingPlayer) {
             return ArmorUtils.ApplyDamage(currentArmorValue, damage);
         }
 
-        public virtual void OnArmorDamage(float damage, Player DamagingPlayer)
-        {
+        public virtual void OnArmorDamage(float damage, Player DamagingPlayer) {
 
         }
 
@@ -89,8 +84,7 @@ namespace JARL.ArmorFramework.Bases
         /// </summary>
         /// <param name="armorTag">The tag to check for.</param>
         /// <returns>True if the armor has the specified tag; otherwise, false.</returns>
-        public bool HasArmorTag(string armorTag)
-        {
+        public bool HasArmorTag(string armorTag) {
             return armorTags.Contains(armorTag);
         }
 
@@ -99,8 +93,7 @@ namespace JARL.ArmorFramework.Bases
         /// </summary>
         /// <param name="healValue">The amount to heal the armor.</param>
         /// <returns>The updated current armor value.</returns>
-        public float HealArmor(float healValue)
-        {
+        public float HealArmor(float healValue) {
             currentArmorValue = Mathf.Clamp(currentArmorValue + healValue, 0, maxArmorValue);
             return currentArmorValue;
         }
@@ -110,8 +103,7 @@ namespace JARL.ArmorFramework.Bases
         /// </summary>
         /// <param name="damageValue">The amount to damage the armor.</param>
         /// <returns>The updated current armor value.</returns>
-        public float DamageArmor(float damageValue)
-        {
+        public float DamageArmor(float damageValue) {
             currentArmorValue = Mathf.Max(currentArmorValue - damageValue, 0);
             OnArmorDamage(damageValue, null);
             return currentArmorValue;
@@ -120,10 +112,8 @@ namespace JARL.ArmorFramework.Bases
         /// <summary>
         /// Initiates the regeneration of armor over time.
         /// </summary>
-        public void RegenerationArmor()
-        {
-            if (Time.time > timeSinceLastDamage + armorRegenCooldownSeconds)
-            {
+        public void RegenerationArmor() {
+            if(Time.time > timeSinceLastDamage + armorRegenCooldownSeconds) {
                 float healValue = armorRegenerationRate * Time.deltaTime;
                 HealArmor(healValue);
             }
