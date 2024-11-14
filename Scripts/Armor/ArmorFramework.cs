@@ -17,9 +17,8 @@ namespace JARL.Armor {
                 return;
             }
 
-            while(RegisteredArmorTypes.Any(armor => armor.Priority == armorType.Priority)) {
-                armorType.Priority++;
-            }
+            var maxPriority = RegisteredArmorTypes.Count > 0 ? RegisteredArmorTypes.Max(a => a.Priority) : 0;
+            armorType.Priority = maxPriority + 1;
 
             RegisteredArmorTypes.Add(armorType);
 
