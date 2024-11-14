@@ -48,15 +48,12 @@ using JARL.Abstract;
 using JARL.Extensions;
 using UnityEngine;
 
-public class ExampleUnityCard : CustomCardUnity
-{
-    public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
-    {
-	// Your Code Here
+public class ExampleUnityCard : CustomCardUnity {
+    public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats) {
+	    // Your Code Here
     }
 
-    public override string GetModName()
-    {
+    public override string GetModName() {
         return "Your Mod Initials";
     }
 }
