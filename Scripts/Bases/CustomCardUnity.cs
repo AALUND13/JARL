@@ -9,14 +9,11 @@ namespace JARL.Bases {
     public abstract class CustomCardUnity : CustomCard {
         [Header("Class Value")]
         public bool AutomatedlyCreateClass = true;
-        private bool createdClassText = false;
 
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers) { }
 
-        private void Update() {
-            if(!createdClassText) {
-                CreateClassText();
-            }
+        private void Start() {
+            CreateClassText();
         }
 
         private class SetLocalPos : MonoBehaviour {
@@ -55,26 +52,21 @@ namespace JARL.Bases {
 
         private void CreateClassText() {
             if(AutomatedlyCreateClass) {
-                List<CardInfo> classes = ClassesRegistry.GetClassInfos(CardType.Entry).ToList();
                 List<CardInfo> subClasses = ClassesRegistry.GetClassInfos(CardType.SubClass).ToList();
-                List<CardInfo> classesCard = ClassesRegistry.GetClassInfos(~CardType.Entry).ToList();
 
-                ClassObject cardClassObject = ClassesRegistry.Get(ModdingUtils.Utils.Cards.instance.GetCardWithObjectName(cardInfo.name));
-
+                ClassObject cardClassObject = ClassesRegistry.Get(cardInfo.sourceCard);
+                LoggingUtils.LogInfo($"CardInfo: {cardInfo.name}, {cardInfo.cardName}");
+                LoggingUtils.LogInfo($"IsClassObjectNull: {cardClassObject == null}");
                 // Check if the card is a class or subclass
-                if(classes.Any(classCardInfo => classCardInfo.cardName == cardInfo.cardName)
-                   || (classesCard.Any(classCardInfo => classCardInfo.cardName == cardInfo.cardName) 
-                   && cardClassObject.RequiredClassesTree.FirstOrDefault()?.Count() > 0)
-                  ) {
+                if(cardClassObject != null && cardClassObject.type != CardType.NonClassCard) {
                     string className = cardClassObject.RequiredClassesTree.FirstOrDefault()?.FirstOrDefault()?.cardName ?? "Class";
 
-                    if(subClasses.Any(subClassCardInfo => subClassCardInfo.cardName == cardInfo.cardName))
+                    if(subClasses.Any(subClassCardInfo => subClassCardInfo.name == cardInfo.name))
                         className = cardInfo.cardName;
 
                     ClassNameMono classNameMono = gameObject.AddComponent<ClassNameMono>();
                     classNameMono.className = className;
                 }
-                createdClassText = true;
             }
         }
 
