@@ -100,7 +100,7 @@ namespace JARL.Armor {
             float remainingDamage = damageVector.magnitude;
 
             ArmorBase[] armorsOfPatch = Armors.Where(armor => armor.ArmorDamagePatch.HasFlag(armorDamagePatch)).ToArray();
-            foreach(ArmorBase armor in armorsOfPatch) {
+            foreach(ArmorBase armor in armorsOfPatch.Reverse()) {
                 LoggingUtils.LogInfo($"Proocessing damage for '{armor.GetType().Name}'");
                 if(remainingDamage <= 0) break;
 
@@ -166,10 +166,17 @@ namespace JARL.Armor {
             }
         }
         private void TryReactivateArmor(ArmorBase armor) {
-            if(!armor.IsActive && !armor.Disable &&
-               (armor.reactivateArmorType == ArmorReactivateType.Second && Time.time >= armor.LastStateChangeTime + armor.reactivateArmorValue) ||
-               (armor.reactivateArmorType == ArmorReactivateType.Percent && armor.CurrentArmorValue / armor.MaxArmorValue > armor.reactivateArmorValue)
-              ) {
+            bool isInactiveAndEnabled = !armor.IsActive && !armor.Disable;
+
+            bool canReactivateByTime =
+                armor.reactivateArmorType == ArmorReactivateType.Second &&
+                Time.time >= armor.LastStateChangeTime + armor.reactivateArmorValue;
+
+            bool canReactivateByPercent =
+                armor.reactivateArmorType == ArmorReactivateType.Percent &&
+                armor.CurrentArmorValue / armor.MaxArmorValue > armor.reactivateArmorValue;
+
+            if(isInactiveAndEnabled && (canReactivateByTime || canReactivateByPercent)) {
                 LoggingUtils.LogInfo($"Armor '{armor.GetType().Name}' passed all reactivation checks. Reactivating...");
                 armor.IsActive = true;
                 armor.OnReactivate();
