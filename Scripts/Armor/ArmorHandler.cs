@@ -62,18 +62,20 @@ namespace JARL.Armor {
                 }
 
                 foreach(ArmorBase armor in Armors) {
-                    if(armor.IsActive) {
-                        totalArmor += armor.CurrentArmorValue;
+                    if(armor.MaxArmorValue > 0) {
+                        if(armor.IsActive) {
+                            totalArmor += armor.CurrentArmorValue;
+                        }
+                        totalMaxArmor += armor.MaxArmorValue;
+
+                        Player.data.GetAdditionalData().totalArmor = totalArmor;
+                        Player.data.GetAdditionalData().totalMaxArmor = totalMaxArmor;
+
+                        armor.OnUpdate();
+                        armor.RegenerationArmor();
+
+                        TryReactivateArmor(armor);
                     }
-                    totalMaxArmor += armor.MaxArmorValue;
-
-                    Player.data.GetAdditionalData().totalArmor = totalArmor;
-                    Player.data.GetAdditionalData().totalMaxArmor = totalMaxArmor;
-
-                    armor.OnUpdate();
-                    armor.RegenerationArmor();
-
-                    TryReactivateArmor(armor);
                 }
 
                 UpdateArmorHealthBar();
