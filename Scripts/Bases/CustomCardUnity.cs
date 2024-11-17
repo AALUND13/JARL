@@ -1,5 +1,7 @@
-﻿using ClassesManagerReborn;
+﻿using BepInEx;
+using ClassesManagerReborn;
 using ClassesManagerReborn.Util;
+using ModdingUtils.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using UnboundLib.Cards;
@@ -9,8 +11,14 @@ namespace JARL.Bases {
     public abstract class CustomCardUnity : CustomCard {
         [Header("Class Value")]
         public bool AutomatedlyCreateClass = true;
+        public string OverrideClassName = "";
 
-        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers) { }
+        [Header("Card Info")]
+        public bool CanBeReassigned = true;
+
+        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block) {
+            cardInfo.GetAdditionalData().canBeReassigned = CanBeReassigned;
+        }
 
         private void Start() {
             CreateClassText();
@@ -54,12 +62,12 @@ namespace JARL.Bases {
             if(AutomatedlyCreateClass) {
                 List<CardInfo> subClasses = ClassesRegistry.GetClassInfos(CardType.SubClass).ToList();
 
-                ClassObject cardClassObject = ClassesRegistry.Get(cardInfo.sourceCard);
-                LoggingUtils.LogInfo($"CardInfo: {cardInfo.name}, {cardInfo.cardName}");
-                LoggingUtils.LogInfo($"IsClassObjectNull: {cardClassObject == null}");
+                ClassObject classObject = ClassesRegistry.Get(cardInfo.sourceCard);
+
                 // Check if the card is a class or subclass
-                if(cardClassObject != null && cardClassObject.type != CardType.NonClassCard) {
-                    string className = cardClassObject.RequiredClassesTree.FirstOrDefault()?.FirstOrDefault()?.cardName ?? "Class";
+                if(classObject != null && classObject.type != CardType.NonClassCard) {
+                    CardInfo subClassCardInfo = classObject.RequiredClassesTree.FirstOrDefault()?.FirstOrDefault();
+                    string className = GetClassName(classObject);
 
                     if(subClasses.Any(subClassCardInfo => subClassCardInfo.name == cardInfo.name))
                         className = cardInfo.cardName;
@@ -67,6 +75,22 @@ namespace JARL.Bases {
                     ClassNameMono classNameMono = gameObject.AddComponent<ClassNameMono>();
                     classNameMono.className = className;
                 }
+            }
+        }
+
+        private string GetClassName(ClassObject classObject) {
+            CardInfo subClassCardInfo = classObject.RequiredClassesTree.FirstOrDefault()?.FirstOrDefault();
+
+            if(subClassCardInfo != null && subClassCardInfo.GetComponent<CustomCardUnity>() != null) {
+                if(!subClassCardInfo.GetComponent<CustomCardUnity>().OverrideClassName.IsNullOrWhiteSpace()) {
+                    return subClassCardInfo.GetComponent<CustomCardUnity>().OverrideClassName;
+                } else {
+                    return subClassCardInfo.cardName;
+                }
+            } else if(subClassCardInfo != null) {
+                return subClassCardInfo.cardName;
+            } else {
+                return "Class";
             }
         }
 
