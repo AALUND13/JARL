@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using JARL.Armor;
 using JARL.Extensions;
+using JARL.Utils;
 using UnityEngine;
 
 namespace JARL.Patches {
@@ -32,6 +33,22 @@ namespace JARL.Patches {
             if(___data.GetComponent<ArmorHandler>()) {
                 ___data.GetComponent<ArmorHandler>().OnRespawn();
             }
+        }
+
+
+
+        [HarmonyPatch("RPCA_Die")]
+        [HarmonyPrefix]
+        public static void RPCA_Die(Player ___player) {
+            if(___player.data.dead) return;
+            DeathHandler.PlayerDeath(___player);
+        }
+
+        [HarmonyPatch("RPCA_Die_Phoenix")]
+        [HarmonyPrefix]
+        public static void RPCA_Die_Phoenix(Player ___player) {
+            if(___player.data.dead) return;
+            DeathHandler.PlayerDeath(___player);
         }
     }
 }
