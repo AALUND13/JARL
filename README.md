@@ -1,4 +1,4 @@
-# JARL (Just Another Rounds Library) 2.0.0
+# JARL (Just Another Rounds Library) 2.1.0
 JARL (Just Another Rounds Library) is a versatile toolkit that introduces a `Armor Framework` and provides utilities like `CustomCardUnity` to streamline the creation of custom cards in Unity.
 
 Feel free send your suggestions or bug report in [issues](https://github.com/AALUND13/JARL/issues) tab.
@@ -41,7 +41,7 @@ public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, Characte
 }
 ```
 ## Custom Card Unity
-### Creating a Custom Card Fr Unity
+### Creating a Custom Card For Unity
 You can create a custom card unity by inheriting from `CustomCardUnity`. Here is an example of a custom card for Unity:
 ```csharp
 using JARL.Abstract;
@@ -55,6 +55,33 @@ public class ExampleUnityCard : CustomCardUnity {
 
     public override string GetModName() {
         return "Your Mod Initials";
+    }
+}
+```
+## Death Handler
+### Creating a Death Handler
+To handle player deaths and track who dealt damage, you can create a custom death handler. Here an example:
+```csharp
+using JARL.Utils;
+using System.Collections.Generic;
+using System.Text;
+using UnityEngine;
+
+public class ExampleDeathHandler : MonoBehaviour {
+    private void OnPlayerDeath(Player player, Dictionary<Player, DamageInfo> playerDamageInfos) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.AppendLine($"Player {player.playerID} died.");
+        foreach(var playerLastDamage in playerLastDamageDamage) {
+            stringBuilder.AppendLine($"Player {playerLastDamage.Key.playerID} dealt {playerLastDamage.Value.damageAmount} damage {playerLastDamage.Value.timeSinceLastDamage} seconds ago.");
+        }
+    }
+
+    void Awake() {
+        DeathHandler.OnPlayerDeath += OnPlayerDeath;
+    }
+
+    void OnDestroy() {
+        DeathHandler.OnPlayerDeath -= OnPlayerDeath;
     }
 }
 ```
