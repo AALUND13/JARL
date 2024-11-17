@@ -9,7 +9,7 @@ namespace JARL.Patches {
     public class HealthHandlerPatch {
         [HarmonyPatch("TakeDamage", typeof(Vector2), typeof(Vector2), typeof(Color), typeof(GameObject), typeof(Player), typeof(bool), typeof(bool))]
         [HarmonyPrefix]
-        private static void TakeDamagePrefix(HealthHandler __instance, ref Vector2 damage, Player damagingPlayer) {
+        private static void TakeDamage(HealthHandler __instance, ref Vector2 damage, Player damagingPlayer) {
             CharacterData data = (CharacterData)Traverse.Create(__instance).Field("data").GetValue();
 
             if(data.GetAdditionalData().totalArmor > 0) {
@@ -25,6 +25,8 @@ namespace JARL.Patches {
             if(data.GetAdditionalData().totalArmor > 0) {
                 data.player.GetComponent<ArmorHandler>().ProcessDamage(ref damage, damagingPlayer, data.player, ArmorDamagePatchType.DoDamage);
             }
+
+            DeathHandler.PlayerDamaged(data.player, damagingPlayer);
         }
 
         [HarmonyPatch("Revive")]
