@@ -26,7 +26,7 @@ namespace JARL.Patches {
                 data.player.GetComponent<ArmorHandler>().ProcessDamage(ref damage, damagingPlayer, data.player, ArmorDamagePatchType.DoDamage);
             }
 
-            DeathHandler.PlayerDamaged(data.player, damagingPlayer);
+            DeathHandler.PlayerDamaged(data.player, damagingPlayer, damage.magnitude);
         }
 
         [HarmonyPatch("Revive")]
@@ -54,3 +54,4 @@ namespace JARL.Patches {
         }
     }
 }
+
