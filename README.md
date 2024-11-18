@@ -68,13 +68,13 @@ using System.Text;
 using UnityEngine;
 
 public class ExampleDeathHandler : MonoBehaviour {
-    private void OnPlayerDeath(Player player, Dictionary<Player, DamageInfo> playerDamageInfos) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.AppendLine($"Player {player.playerID} died.");
-        foreach(var playerLastDamage in playerLastDamageDamage) {
-            stringBuilder.AppendLine($"Player {playerLastDamage.Key.playerID} dealt {playerLastDamage.Value.damageAmount} damage {playerLastDamage.Value.timeSinceLastDamage} seconds ago.");
-        }
-    }
+	private static void OnPlayerDeath(Player player, Dictionary<Player, DamageInfo> playerDamageInfos) {
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.AppendLine($"Player {player.playerID} died.");
+		foreach(var playerLastDamage in playerDamageInfos) {
+			stringBuilder.AppendLine($"Player {playerLastDamage.Key.playerID} dealt {playerLastDamage.Value.DamageAmount} damage {playerLastDamage.Value.TimeSinceLastDamage} seconds ago.");
+		}
+	}
 
     void Awake() {
         DeathHandler.OnPlayerDeath += OnPlayerDeath;
