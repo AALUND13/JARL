@@ -67,7 +67,7 @@ namespace JARL.Utils {
         private static void RPCA_PlayerDeath(int playerID, int[] playerIDs, float[] timeSinceLastDamage, float[] damageAmounts) {
             Dictionary<Player, DamageInfo> playerDamageInfo = new Dictionary<Player, DamageInfo>();
             for(int i = 0; i < playerIDs.Length; i++) {
-                playerDamageInfo.Add(PlayerManager.instance.players.Find(player => player.playerID == playerIDs[i]), new DamageInfo(damageAmounts[i], timeSinceLastDamage[i]));
+                playerDamageInfo.Add(PlayerManager.instance.players.Find(p => p.playerID == playerIDs[i]), new DamageInfo(damageAmounts[i], timeSinceLastDamage[i]));
             }
 
             Player player = PlayerManager.instance.players.Find(p => p.playerID == playerID);

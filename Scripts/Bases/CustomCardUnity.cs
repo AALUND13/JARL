@@ -69,9 +69,6 @@ namespace JARL.Bases {
                     CardInfo subClassCardInfo = classObject.RequiredClassesTree.FirstOrDefault()?.FirstOrDefault();
                     string className = GetClassName(classObject);
 
-                    if(subClasses.Any(subClassCardInfo => subClassCardInfo.name == cardInfo.name))
-                        className = cardInfo.cardName;
-
                     ClassNameMono classNameMono = gameObject.AddComponent<ClassNameMono>();
                     classNameMono.className = className;
                 }
