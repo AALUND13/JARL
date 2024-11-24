@@ -1,7 +1,6 @@
 ﻿using BepInEx;
 using ClassesManagerReborn;
 using ClassesManagerReborn.Util;
-using HarmonyLib;
 using ModdingUtils.Extensions;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,7 +98,6 @@ namespace JARL.Bases {
                 }
             }
         }
-
         private string GetClassName(ClassObject classObject) {
             CardInfo subClassCardInfo = classObject.RequiredClassesTree.FirstOrDefault()?.FirstOrDefault();
 
@@ -115,6 +113,7 @@ namespace JARL.Bases {
                 return "Class";
             }
         }
+
 
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats) { }
     }
