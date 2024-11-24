@@ -22,7 +22,7 @@ public class JustAnotherRoundsLibrary : BaseUnityPlugin {
     internal const string ModInitials = "JARL";
     internal const string ModId = "com.aalund13.rounds.jarl";
     internal const string ModName = "Just Another Rounds Library";
-    internal const string Version = "2.1.1"; // What version are we on (major.minor.patch)?
+    internal const string Version = "2.2.0"; // What version are we on (major.minor.patch)?
 
     internal static List<BaseUnityPlugin> plugins;
     internal static AssetBundle assets = Jotunn.Utils.AssetUtils.LoadAssetBundleFromResources("jarl_assets", typeof(JustAnotherRoundsLibrary).Assembly);

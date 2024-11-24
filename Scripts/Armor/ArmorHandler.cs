@@ -42,7 +42,14 @@ namespace JARL.Armor {
             Armors = Armors.OrderByDescending(armor => armor.Priority).ToList();
         }
 
+        public ArmorBase GetArmorByType<T>() where T : ArmorBase {
+            return Armors.Find(armor => armor.GetType() == typeof(T));
+        }
+
         public ArmorBase GetArmorByType(Type type) {
+            if(type == null) return null;
+            if(!typeof(ArmorBase).IsAssignableFrom(type)) return null;
+
             return Armors.Find(armor => armor.GetType() == type);
         }
 
