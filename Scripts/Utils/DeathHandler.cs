@@ -33,7 +33,7 @@ namespace JARL.Utils {
         private static readonly Dictionary<Player, Dictionary<Player, DamageInfo>> damageTrackings = new Dictionary<Player, Dictionary<Player, DamageInfo>>();
 
         internal static void PlayerDamaged(Player player, Player damagingPlayer, float damageAmount) {
-            if(damagingPlayer == null || damageAmount <= 0) return;
+            if(damagingPlayer == null) return;
 
             if(!damageTrackings.ContainsKey(player)) {
                 damageTrackings.Add(player, new Dictionary<Player, DamageInfo>());

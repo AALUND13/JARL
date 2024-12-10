@@ -9,10 +9,14 @@ namespace JARL.Patches {
     public class HealthHandlerPatch {
         [HarmonyPatch("TakeDamage", typeof(Vector2), typeof(Vector2), typeof(Color), typeof(GameObject), typeof(Player), typeof(bool), typeof(bool))]
         [HarmonyPrefix]
-        private static void TakeDamage(HealthHandler __instance, ref Vector2 damage, Player damagingPlayer) {
+        public static void TakeDamage(HealthHandler __instance, ref Vector2 damage, Player damagingPlayer, bool ignoreBlock) {
             CharacterData data = (CharacterData)Traverse.Create(__instance).Field("data").GetValue();
+            if(damage == Vector2.zero || !data.isPlaying || data.dead || (data.block.IsBlocking() && !ignoreBlock) || __instance.isRespawning) {
+                return;
+            }
 
             if(data.GetAdditionalData().totalArmor > 0) {
+
                 data.player.GetComponent<ArmorHandler>().ProcessDamage(ref damage, damagingPlayer, data.player, ArmorDamagePatchType.TakeDamage);
             }
         }
@@ -21,8 +25,12 @@ namespace JARL.Patches {
         [HarmonyPrefix]
         public static void DoDamage(HealthHandler __instance, ref Vector2 damage, Vector2 position, Color blinkColor, GameObject damagingWeapon, Player damagingPlayer, bool healthRemoval, bool lethal, bool ignoreBlock) {
             CharacterData data = (CharacterData)Traverse.Create(__instance).Field("data").GetValue();
+            if(damage == Vector2.zero || !data.isPlaying || data.dead || (data.block.IsBlocking() && !ignoreBlock) || __instance.isRespawning) {
+                return;
+            }
 
             if(data.GetAdditionalData().totalArmor > 0) {
+
                 data.player.GetComponent<ArmorHandler>().ProcessDamage(ref damage, damagingPlayer, data.player, ArmorDamagePatchType.DoDamage);
             }
 
