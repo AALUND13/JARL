@@ -1,5 +1,4 @@
-﻿using JARL.Armor;
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 
 namespace JARL.Extensions {

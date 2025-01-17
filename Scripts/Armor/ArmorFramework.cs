@@ -29,8 +29,7 @@ namespace JARL.Armor {
         }
 
         public static void ResetEveryPlayerArmorStats(bool skipArmorHandlerChecking = true) {
-            for(int i = 0; i < PlayerManager.instance.players.Count; i++) {
-                Player player = PlayerManager.instance.players[i];
+            foreach(Player player in PlayerManager.instance.players) {
                 if(skipArmorHandlerChecking || player.GetComponent<ArmorHandler>() == null) {
                     LoggingUtils.LogInfo($"Reseting player id '{player.playerID}' armor stats");
                     var armorHandler = player.gameObject.GetOrAddComponent<ArmorHandler>();
@@ -40,7 +39,7 @@ namespace JARL.Armor {
         }
 
         internal static void RegisterArmorTabinfoInterface(ArmorBase armor) {
-            if(JustAnotherRoundsLibrary.plugins.Exists(plugin => plugin.Info.Metadata.GUID == "com.willuwontu.rounds.tabinfo")) {
+            if(JustAnotherRoundsLibrary.Plugins.Exists(plugin => plugin.Info.Metadata.GUID == "com.willuwontu.rounds.tabinfo")) {
                 TabinfoInterface.RegisterArmorTabinfoInterface(armor);
             }
         }

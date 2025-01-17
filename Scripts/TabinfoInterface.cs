@@ -21,7 +21,7 @@ namespace JARL {
         }
 
         public static void RegisterArmorTabinfoInterface(ArmorBase registerArmor) {
-            if(JustAnotherRoundsLibrary.plugins.Exists(plugin => plugin.Info.Metadata.GUID == "com.willuwontu.rounds.tabinfo")) {
+            if(JustAnotherRoundsLibrary.Plugins.Exists(plugin => plugin.Info.Metadata.GUID == "com.willuwontu.rounds.tabinfo")) {
                 Type armorType = registerArmor.GetType();
                 TabInfoManager.RegisterStat((StatCategory)ArmorsStatsCategory, $"{registerArmor} Armor", (p) => ArmorFramework.ArmorHandlers[p].GetArmorByType(armorType).MaxArmorValue > 0, (p) => {
                     ArmorBase armor = ArmorFramework.ArmorHandlers[p].GetArmorByType(armorType);
