@@ -62,24 +62,24 @@ namespace JARL.Bases {
         }
 
         private void CreateModText() {
-            GameObject modNameObj = new GameObject("ModNameText");
-
             RectTransform[] allChildrenRecursive = gameObject.GetComponentsInChildren<RectTransform>();
             var edgeTransform = allChildrenRecursive.FirstOrDefault(obj => obj.gameObject.name == "EdgePart (2)");
             if(edgeTransform != null) {
+                GameObject modNameObj = new GameObject("ModNameText");
+
                 GameObject bottomLeftCorner = edgeTransform.gameObject;
                 modNameObj.gameObject.transform.SetParent(bottomLeftCorner.transform);
+
+                TextMeshProUGUI modText = modNameObj.gameObject.AddComponent<TextMeshProUGUI>();
+                modText.text = GetModName().Sanitize();
+                modNameObj.transform.localEulerAngles = new Vector3(0f, 0f, 135f);
+
+                modNameObj.transform.localScale = Vector3.one;
+                modNameObj.AddComponent<SetLocalPos>();
+                modText.alignment = TextAlignmentOptions.Bottom;
+                modText.alpha = 0.1f;
+                modText.fontSize = 54;
             }
-
-            TextMeshProUGUI modText = modNameObj.gameObject.AddComponent<TextMeshProUGUI>();
-            modText.text = GetModName().Sanitize();
-            modNameObj.transform.localEulerAngles = new Vector3(0f, 0f, 135f);
-
-            modNameObj.transform.localScale = Vector3.one;
-            modNameObj.AddComponent<SetLocalPos>();
-            modText.alignment = TextAlignmentOptions.Bottom;
-            modText.alpha = 0.1f;
-            modText.fontSize = 54;
         }
 
         private void CreateClassText() {
