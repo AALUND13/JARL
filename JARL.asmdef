@@ -6,7 +6,8 @@
         "Unity.TextMeshPro",
         "TabInfo",
         "ModsPlus",
-        "ClassesManagerReborn"
+        "ClassesManagerReborn",
+        "RarityLib"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

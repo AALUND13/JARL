@@ -2,6 +2,7 @@
 using ClassesManagerReborn;
 using ClassesManagerReborn.Util;
 using ModdingUtils.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -10,6 +11,7 @@ using UnboundLib.Cards;
 using UnityEngine;
 
 namespace JARL.Bases {
+    [Obsolete("CustomCardUnity is deprecated, please use CustomUnityCard instead.")]
     public abstract class CustomCardUnity : CustomCard {
         [Header("Class Value")]
         public bool AutomatedlyCreateClass = true;
@@ -23,6 +25,7 @@ namespace JARL.Bases {
         }
 
         private void Start() {
+            UnityEngine.Debug.LogWarning("CustomCardUnity is deprecated, please use CustomUnityCard instead.");
             CreateModText();
             CreateClassText();
         }

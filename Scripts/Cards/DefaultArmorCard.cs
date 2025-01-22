@@ -3,7 +3,7 @@ using JARL.Armor.Builtin;
 using JARL.Bases;
 using UnityEngine;
 namespace JARL.Cards {
-    public class DefaultArmorCard : CustomCardUnity {
+    public class DefaultArmorCard : CustomUnityCard {
         [Header("Armor: Max Armor Amd Regen")]
         public float MaxArmorValue;
         public float RegenerationRate;

@@ -3,7 +3,7 @@ using JARL.Extensions;
 using UnityEngine;
 
 namespace JARL {
-    public class ArmorPierceCard : CustomCardUnity {
+    public class ArmorPierceCard : CustomUnityCard {
         [Header("Stats: Armor Pierce Percent")]
         public float ArmorPiercePercent;
 

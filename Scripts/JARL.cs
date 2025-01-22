@@ -15,7 +15,11 @@ namespace JARL {
     [BepInDependency("pykess.rounds.plugins.moddingutils")]
     [BepInDependency("com.willis.rounds.modsplus")]
     [BepInDependency("root.classes.manager.reborn")]
+    [BepInDependency("root.rarity.lib")]
+    [BepInDependency("com.CrazyCoders.Rounds.RarityBundle")]
+
     [BepInDependency("com.willuwontu.rounds.tabinfo", BepInDependency.DependencyFlags.SoftDependency)]
+    
     [BepInPlugin(ModId, ModName, Version)]
     [BepInProcess("Rounds.exe")]
 
@@ -23,7 +27,7 @@ namespace JARL {
         internal const string ModInitials = "JARL";
         internal const string ModId = "com.aalund13.rounds.jarl";
         internal const string ModName = "Just Another Rounds Library";
-        internal const string Version = "2.2.3"; // What version are we on (major.minor.patch)?
+        internal const string Version = "2.3.0"; // What version are we on (major.minor.patch)?
 
         internal static List<BaseUnityPlugin> Plugins;
         internal static AssetBundle Assets;
