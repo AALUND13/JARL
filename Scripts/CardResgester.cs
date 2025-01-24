@@ -1,28 +1,81 @@
-﻿using System.Collections.Generic;
+﻿using BepInEx;  
+using BepInEx.Bootstrap;
+using JARL.Bases;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnboundLib;
 using UnboundLib.Cards;
 using UnityEngine;
 
 namespace JARL {
-    internal class CardResgester : MonoBehaviour {
+    public class CardResgester : MonoBehaviour {
         public List<GameObject> Cards;
-        public List<GameObject> HiddenCards;
 
-        public static Dictionary<string, CardInfo> ModCards = new Dictionary<string, CardInfo>();
+        public static Dictionary<Type, CardResgester> CardRegistries = new Dictionary<Type, CardResgester>();
+        public Dictionary<string, CardInfo> ModCards = new Dictionary<string, CardInfo>();
 
-        internal void RegisterCards() {
+        private void SetupCard(CustomCard customCard) {
+            if(customCard == null) return;
+
+            customCard.cardInfo = customCard.GetComponent<CardInfo>();
+            customCard.gun = customCard.GetComponent<Gun>();
+            customCard.cardStats = customCard.GetComponent<ApplyCardStats>();
+            customCard.statModifiers = customCard.GetComponent<CharacterStatModifiers>();
+            customCard.block = customCard.gameObject.GetOrAddComponent<Block>();
+
+            customCard.SetupCard(customCard.cardInfo, customCard.gun, customCard.cardStats, customCard.statModifiers, customCard.block);
+        }
+
+        public void RegisterCards<T>(string name = "") where T : BaseUnityPlugin {
+            // Get the instance of the mod
+            PluginInfo plugin = Chainloader.PluginInfos.FirstOrDefault(x => x.Value.Instance is T).Value;
+            CardRegistries.Add(typeof(T), this);
+
+            string modName = name == "" ? plugin.Metadata.Name : name;
+
             foreach(var Card in Cards) {
                 CardInfo cardInfo = Card.GetComponent<CardInfo>();
+                CustomUnityCard customCard = Card.GetComponent<CustomUnityCard>();
+                if(cardInfo == null) {
+                    Debug.LogError($"[{modName}][Card] {Card.name} does not have a 'CardInfo' component");
+                    continue;
+                } else if(customCard == null) {
+                    Debug.LogError($"[{modName}][Card] {cardInfo.cardName} does not have a 'CustomUnityCard' component");
+                    continue;
+                }
+                
+                try {
+                    SetupCard(customCard);
+                } catch(Exception e) {
+                    Debug.LogError($"[{modName}][Card] {cardInfo.cardName} failed to setup the card: {e}");
+                    continue;
+                }
+                customCard.RegisterUnityCard((registerCardInfo) => {
+                    try {
+                        customCard.Register(registerCardInfo);
+                    } catch(Exception e) {
+                        Debug.LogError($"[{modName}][Card] {registerCardInfo.cardName} failed to execute the 'Register' method: {e}");
+                    }
+                });
 
-                CustomCard.RegisterUnityCard(Card, JustAnotherRoundsLibrary.ModInitials, cardInfo.cardName, true, null);
+                Debug.Log($"[{modName}][Card] Registered Card: {cardInfo.cardName}");
                 ModCards.Add(cardInfo.cardName, cardInfo);
             }
-            foreach(var Card in HiddenCards) {
-                CardInfo cardInfo = Card.GetComponent<CardInfo>();
+        }
 
-                CustomCard.RegisterUnityCard(Card, JustAnotherRoundsLibrary.ModInitials, cardInfo.cardName, false, null);
-                ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo);
-                ModCards.Add(cardInfo.cardName, cardInfo);
+        public static CardResgester GetCardResgester<T>() where T : BaseUnityPlugin {
+            return GetCardResgester(typeof(T));
+        }
+        public static CardResgester GetCardResgester(Type type) {
+            if (type == typeof(BaseUnityPlugin)) {
+                return null;
             }
+
+            if(CardRegistries.ContainsKey(type)) {
+                return CardRegistries[type];
+            }
+            return null;
         }
     }
 }

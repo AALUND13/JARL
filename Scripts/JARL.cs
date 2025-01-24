@@ -1,7 +1,5 @@
 ﻿using BepInEx;
-using ClassesManagerReborn;
 using HarmonyLib;
-using JARL;
 using JARL.Armor;
 using JARL.Armor.Bases.Builtin;
 using JARL.Armor.Builtin;
@@ -19,7 +17,7 @@ namespace JARL {
     [BepInDependency("com.CrazyCoders.Rounds.RarityBundle")]
 
     [BepInDependency("com.willuwontu.rounds.tabinfo", BepInDependency.DependencyFlags.SoftDependency)]
-    
+
     [BepInPlugin(ModId, ModName, Version)]
     [BepInProcess("Rounds.exe")]
 
@@ -27,14 +25,14 @@ namespace JARL {
         internal const string ModInitials = "JARL";
         internal const string ModId = "com.aalund13.rounds.jarl";
         internal const string ModName = "Just Another Rounds Library";
-        internal const string Version = "2.3.0"; // What version are we on (major.minor.patch)?
+        internal const string Version = "2.3.1"; // What version are we on (major.minor.patch)?
 
         internal static List<BaseUnityPlugin> Plugins;
         internal static AssetBundle Assets;
 
         void Awake() {
             Assets = Jotunn.Utils.AssetUtils.LoadAssetBundleFromResources("jarl_assets", typeof(JustAnotherRoundsLibrary).Assembly);
-            Assets.LoadAsset<GameObject>("ModCards").GetComponent<CardResgester>().RegisterCards();
+            Assets.LoadAsset<GameObject>("ModCards").GetComponent<CardResgester>().RegisterCards<JustAnotherRoundsLibrary>("JARL");
 
             var harmony = new Harmony(ModId);
             harmony.PatchAll();
@@ -42,7 +40,7 @@ namespace JARL {
 
         void Start() {
             ConfigHandler.RegesterMenu(Config);
-                
+
             Plugins = (List<BaseUnityPlugin>)typeof(BepInEx.Bootstrap.Chainloader).GetField("_plugins", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
             UnboundLib.GameModes.GameModeManager.AddHook(UnboundLib.GameModes.GameModeHooks.HookGameStart, (_) => GameStart());
 

@@ -288,5 +288,13 @@ MonoBehaviour:
   cardStats: {fileID: 0}
   statModifiers: {fileID: 0}
   block: {fileID: 0}
-  automatedlyCreateClass: 1
+  OverrideClassName: 
+  CardClassType: 16
+  CardLimit: 4
+  RequiredClass: {fileID: 0}
+  RequiredClassTree: []
+  CardRarity: 0
+  CardRarityCustom: 
+  CanBeReassigned: 1
+  IsHidden: 0
   ArmorPiercePercent: 0.25

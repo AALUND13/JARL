@@ -63,6 +63,7 @@ namespace JARL.Armor {
         private void Update() {
             float totalArmor = 0;
             float totalMaxArmor = 0;
+
             if(Player.data.isPlaying) {
                 if(ActiveArmors.Count != activeArmorsCount) {
                     ResetArmorHealthBar();
@@ -76,9 +77,6 @@ namespace JARL.Armor {
                         }
                         totalMaxArmor += armor.MaxArmorValue;
 
-                        Player.data.GetAdditionalData().totalArmor = totalArmor;
-                        Player.data.GetAdditionalData().totalMaxArmor = totalMaxArmor;
-
                         armor.OnUpdate();
                         armor.RegenerationArmor();
 
@@ -88,6 +86,9 @@ namespace JARL.Armor {
 
                 UpdateArmorHealthBar();
             }
+
+            Player.data.GetAdditionalData().totalArmor = totalArmor;
+            Player.data.GetAdditionalData().totalMaxArmor = totalMaxArmor;
         }
 
         private void Awake() {
@@ -100,6 +101,7 @@ namespace JARL.Armor {
         private void OnDestroy() {
             ArmorFramework.ArmorHandlers.Remove(Player);
         }
+
 
 
         internal void ProcessDamage(ref Vector2 damageVector, Player damagingPlayer, Player hurtPlayer, ArmorDamagePatchType armorDamagePatch) {
@@ -162,6 +164,7 @@ namespace JARL.Armor {
 
             Vector2 remainingDamageDirection = damageVector.normalized * remainingDamage;
             damageVector = remainingDamageDirection;
+            RefreshTotalArmor();
         }
 
         internal void OnRespawn() {
@@ -169,6 +172,7 @@ namespace JARL.Armor {
                 if(armor.RegenerateFullyAfterRevive) {
                     LoggingUtils.LogInfo($"Regenerating ArmorType '{armor.GetType().Name}' fully");
                     armor.CurrentArmorValue = armor.MaxArmorValue;
+                    armor.IsActive = true;
                 }
                 armor.OnRespawn();
             }
@@ -239,6 +243,21 @@ namespace JARL.Armor {
             }
 
             armorHealthBars.Clear();
+        }
+
+        private void RefreshTotalArmor() {
+            float totalArmor = 0;
+            float totalMaxArmor = 0;
+            foreach(ArmorBase armor in Armors) {
+                if(armor.MaxArmorValue > 0) {
+                    if(armor.IsActive) {
+                        totalArmor += armor.CurrentArmorValue;
+                    }
+                    totalMaxArmor += armor.MaxArmorValue;
+                }
+            }
+            Player.data.GetAdditionalData().totalArmor = totalArmor;
+            Player.data.GetAdditionalData().totalMaxArmor = totalMaxArmor;
         }
 
         [PunRPC]

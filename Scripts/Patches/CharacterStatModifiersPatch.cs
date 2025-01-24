@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using JARL.Armor;
 using JARL.Extensions;
+using UnboundLib;
 
 namespace JARL.Patches {
     [HarmonyPatch(typeof(CharacterStatModifiers))]
@@ -9,8 +10,9 @@ namespace JARL.Patches {
         [HarmonyPrefix]
         public static void ResetStats(CharacterStatModifiers __instance) {
             CharacterData data = (CharacterData)Traverse.Create(__instance).Field("data").GetValue();
-            data.GetAdditionalData().ArmorPiercePercent = 0;
-            ArmorFramework.ResetEveryPlayerArmorStats();
+
+            data.gameObject.GetOrAddComponent<ArmorHandler>().ResetArmorStats();
+            data.GetAdditionalData().ResetArmorStats();
         }
     }
 

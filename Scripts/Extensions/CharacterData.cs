@@ -8,6 +8,10 @@ namespace JARL.Extensions {
         public float ArmorPiercePercent;
 
         public JARLCharacterDataAdditionalData() {
+            ResetArmorStats();
+        }
+
+        public void ResetArmorStats() {
             totalArmor = 0;
             totalMaxArmor = 0;
             ArmorPiercePercent = 0;
