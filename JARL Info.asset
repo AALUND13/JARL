@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: JARL Info
   m_EditorClassIdentifier: 
   ModName: JARL
-  Version: 2.3.2
+  Version: 2.4.0
   WebsiteURL: https://github.com/AALUND13/JARL
   Description: JARL (Just Another Rounds Library) is a versatile toolkit that introduces
     a Armor Framework and provides utilities like CustomCardUnity to streamline the

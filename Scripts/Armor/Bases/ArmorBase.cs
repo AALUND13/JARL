@@ -13,7 +13,6 @@ namespace JARL.Armor.Bases {
         public float MaxArmorValue = 0;
         public float CurrentArmorValue = 0;
 
-
         public float ArmorRegenerationRate = 0;
         public float ArmorRegenCooldownSeconds = 0;
 
@@ -23,7 +22,7 @@ namespace JARL.Armor.Bases {
         public bool IsActive { get; internal set; }
         public string DeactivateText = "";
 
-        public bool disable;
+        private bool disable;
         public bool Disable {
             get => disable;
             set {
@@ -82,6 +81,8 @@ namespace JARL.Armor.Bases {
         public virtual void OnRespawn() { }
 
         public virtual void OnReactivate() { }
+
+        public virtual void OnRegister() { }
 
         public override string ToString() {
             return GetType().Name.Replace("Armor", "");

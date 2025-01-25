@@ -268,7 +268,7 @@ namespace JARL.Armor {
                 return;
             }
 
-            LoggingUtils.LogInfo($"Adding armor '{armorType}' with max value {maxArmorValue}, regeneration rate {regenerationRate}, and reactivation value {reactivateArmorValue}");
+            LoggingUtils.LogInfo($"Adding '{armor}' armor with max value {maxArmorValue}, regeneration rate {regenerationRate}, and reactivation value {reactivateArmorValue}");
 
             armor.MaxArmorValue += Mathf.Max(maxArmorValue, 0);
             armor.ArmorRegenerationRate += Mathf.Max(regenerationRate, 0);
