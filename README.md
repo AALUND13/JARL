@@ -30,7 +30,7 @@ The base class `ArmorBase` has a lot of methods/properties that you can change/o
 After creating your armor, you can register it using the `RegisterArmorType` method from the `ArmorFramework` class:
 ```csharp
 void Start() {
-	ArmorFramework.RegisterArmorType(new ExampleArmor());
+	ArmorFramework.RegisterArmorType<ExampleArmor>();
 }
 ``` 
 #### Adding Armor To Players
