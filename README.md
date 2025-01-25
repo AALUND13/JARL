@@ -19,8 +19,8 @@ public class ExampleArmor : ArmorBase {
         return new BarColor(Color.cyan * 0.6f, Color.cyan * 0.45f);
     }
 
-    public override void SetupArmor() {
-        armorTags.Add("CanArmorPierce");
+    public ExampleArmor() {
+        ArmorTags.Add("CanArmorPierce");
         reactivateArmorType = ArmorReactivateType.Second;
     }
 }
@@ -40,15 +40,13 @@ public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, Characte
     ArmorFramework.armorHandlers[player].AddArmor(typeof(ExampleArmor), 50, 5, 5, ArmorReactivateType.Second, 5);
 }
 ```
-## Custom Card Unity
+## Custom Unity Card
 ### Creating a Custom Card For Unity
-You can create a custom card unity by inheriting from `CustomCardUnity`. Here is an example of a custom card for Unity:
+You can create a custom unity card by inheriting from `CustomUnityCard`. Here is an example of a custom card for Unity:
 ```csharp
-using JARL.Abstract;
-using JARL.Extensions;
-using UnityEngine;
+using JARL.Bases;
 
-public class ExampleUnityCard : CustomCardUnity {
+public class ExampleUnityCard : CustomUnityCard {
     public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats) {
 	    // Your Code Here
     }
@@ -58,6 +56,9 @@ public class ExampleUnityCard : CustomCardUnity {
     }
 }
 ```
+> [!Note]
+> Make sure you called `CustomUnityCard::Register` after you register your card.  
+> Your dont need to call `CustomUnityCard::Register` if you are using the `CardRegister` class from the `JARL` namespace, Because it will automatically call the `CustomUnityCard::Register` method for you.
 ## Death Handler
 ### Creating a Death Handler
 To handle player deaths and track who dealt damage, you can create a custom death handler. Here an example:
