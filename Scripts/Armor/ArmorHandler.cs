@@ -53,10 +53,18 @@ namespace JARL.Armor {
             return Armors.Find(armor => armor.GetType() == type);
         }
 
+        [Obsolete("ArmorHandler::AddArmor is deprecated, use ArmorHandler::AddArmor<T> instead.")]
         public void AddArmor(Type armorType, float maxArmorValue, float regenerationRate, float regenCooldownSeconds, ArmorReactivateType reactivateArmorType, float reactivateArmorValue) {
             if(PhotonNetwork.OfflineMode || PhotonNetwork.IsMasterClient) {
                 LoggingUtils.LogInfo("Calling method 'RPCA_AddArmor' on all clients");
                 Player.data.view.RPC(nameof(RPCA_AddArmor), RpcTarget.All, armorType.AssemblyQualifiedName, maxArmorValue, regenerationRate, regenCooldownSeconds, reactivateArmorType, reactivateArmorValue);
+            }
+        }
+
+        public void AddArmor<T>(float maxArmorValue, float regenerationRate, float regenCooldownSeconds, ArmorReactivateType reactivateArmorType, float reactivateArmorValue) where T : ArmorBase {
+            if(PhotonNetwork.OfflineMode || PhotonNetwork.IsMasterClient) {
+                LoggingUtils.LogInfo("Calling method 'RPCA_AddArmor' on all clients");
+                Player.data.view.RPC(nameof(RPCA_AddArmor), RpcTarget.All, typeof(T).AssemblyQualifiedName, maxArmorValue, regenerationRate, regenCooldownSeconds, reactivateArmorType, reactivateArmorValue);
             }
         }
 
