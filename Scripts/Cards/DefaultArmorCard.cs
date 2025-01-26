@@ -13,7 +13,7 @@ namespace JARL.Cards {
         public ArmorReactivateType ArmorReactivateType;
         public float ReactivateArmorValue;
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats) {
-            ArmorFramework.ArmorHandlers[player].AddArmor(typeof(DefaultArmor), MaxArmorValue, RegenerationRate, RegenCooldownSeconds, ArmorReactivateType, ReactivateArmorValue);
+            ArmorFramework.ArmorHandlers[player].AddArmor<DefaultArmor>(MaxArmorValue, RegenerationRate, RegenCooldownSeconds, ArmorReactivateType, ReactivateArmorValue);
         }
 
         public override string GetModName() {
