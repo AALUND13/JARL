@@ -44,7 +44,7 @@ namespace JARL.Armor {
         }
 
         public ArmorBase GetArmorByType<T>() where T : ArmorBase {
-            ArmorBase armor = Armors.Find(armor => armor.GetType() == typeof(T));
+            ArmorBase armor = Armors.Find(armorType => armorType.GetType() == typeof(T));
             if(armor == null) throw new InvalidOperationException($"Armor of type '{typeof(T).Name}' not found, Make sure it is registered.");
             return armor;
         }
@@ -53,7 +53,7 @@ namespace JARL.Armor {
             if(type == null) throw new ArgumentNullException(nameof(type));
             if(!typeof(ArmorBase).IsAssignableFrom(type)) throw new ArgumentException($"Type '{type.Name}' is not an ArmorBase type.");
 
-            ArmorBase armor = Armors.Find(armor => armor.GetType() == type);
+            ArmorBase armor = Armors.Find(armorType => armorType.GetType() == type);
             if(armor == null) throw new InvalidOperationException($"Armor of type '{type.Name}' not found, Make sure it is registered.");
             return armor;
         }
