@@ -43,8 +43,8 @@ namespace JARL.Armor {
             Armors = Armors.OrderByDescending(armor => armor.Priority).ToList();
         }
 
-        public T GetArmorByType<T>() where T : ArmorBase {
-            T armor = (T)Armors.Find(armor => armor.GetType() == typeof(T));
+        public ArmorBase GetArmorByType<T>() where T : ArmorBase {
+            ArmorBase armor = Armors.Find(armor => armor.GetType() == typeof(T));
             if(armor == null) throw new InvalidOperationException($"Armor of type '{typeof(T).Name}' not found, Make sure it is registered.");
             return armor;
         }
