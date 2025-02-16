@@ -19,9 +19,8 @@ public class ExampleArmor : ArmorBase {
         return new BarColor(Color.cyan * 0.6f, Color.cyan * 0.45f);
     }
 
-    public ExampleArmor() {
-        ArmorTags.Add("CanArmorPierce");
-        reactivateArmorType = ArmorReactivateType.Second;
+    public override void OnRegister() {
+        ArmorTags.Add("CanArmorPierce"); // Add this tag if the armor can be pierce
     }
 }
 ```
