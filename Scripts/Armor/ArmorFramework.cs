@@ -34,7 +34,7 @@ namespace JARL.Armor {
             LoggingUtils.LogInfo($"Successfully registered ArmorType: '{armorType.GetType().Name}'");
         }
 
-        public static void ResetEveryPlayerArmorStats(bool skipArmorHandlerChecking = true) {
+        internal static void ResetEveryPlayerArmorStats(bool skipArmorHandlerChecking = true) {
             foreach(Player player in PlayerManager.instance.players) {
                 if(skipArmorHandlerChecking || player.GetComponent<ArmorHandler>() == null) {
                     LoggingUtils.LogInfo($"Reseting player id '{player.playerID}' armor stats");
@@ -50,7 +50,7 @@ namespace JARL.Armor {
             }
         }
 
-        public static void EnsureUniquePriorities(List<ArmorBase> registeredArmorTypes) {
+        private static void EnsureUniquePriorities(List<ArmorBase> registeredArmorTypes) {
             var sortedArmorTypes = registeredArmorTypes.OrderBy(a => a.Priority).ThenBy(a => a.GetType().Name).ToList();
 
             int currentPriority = sortedArmorTypes.FirstOrDefault()?.Priority ?? 0;
