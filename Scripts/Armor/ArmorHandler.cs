@@ -3,6 +3,7 @@ using JARL.Extensions;
 using JARL.Utils;
 using ModsPlus;
 using Photon.Pun;
+using Photon.Pun.Simple;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace JARL.Armor {
         public static event ProcessDamageDelegate DamageProcessingMethodsAfter;
 
 
-        public Player Player { get; internal set; }
+        public Player Player { get; private set; }
 
 
         public void ResetArmorStats() {
@@ -42,23 +43,19 @@ namespace JARL.Armor {
             Armors = Armors.OrderByDescending(armor => armor.Priority).ToList();
         }
 
-        public ArmorBase GetArmorByType<T>() where T : ArmorBase {
-            return Armors.Find(armor => armor.GetType() == typeof(T));
+        public T GetArmorByType<T>() where T : ArmorBase {
+            T armor = (T)Armors.Find(armor => armor.GetType() == typeof(T));
+            if(armor == null) throw new InvalidOperationException($"Armor of type '{typeof(T).Name}' not found, Make sure it is registered.");
+            return armor;
         }
 
         public ArmorBase GetArmorByType(Type type) {
-            if(type == null) return null;
-            if(!typeof(ArmorBase).IsAssignableFrom(type)) return null;
+            if(type == null) throw new ArgumentNullException(nameof(type));
+            if(!typeof(ArmorBase).IsAssignableFrom(type)) throw new ArgumentException($"Type '{type.Name}' is not an ArmorBase type.");
 
-            return Armors.Find(armor => armor.GetType() == type);
-        }
-
-        [Obsolete("ArmorHandler::AddArmor is deprecated, use ArmorHandler::AddArmor<T> instead.")]
-        public void AddArmor(Type armorType, float maxArmorValue, float regenerationRate, float regenCooldownSeconds, ArmorReactivateType reactivateArmorType, float reactivateArmorValue) {
-            if(PhotonNetwork.OfflineMode || PhotonNetwork.IsMasterClient) {
-                LoggingUtils.LogInfo("Calling method 'RPCA_AddArmor' on all clients");
-                Player.data.view.RPC(nameof(RPCA_AddArmor), RpcTarget.All, armorType.AssemblyQualifiedName, maxArmorValue, regenerationRate, regenCooldownSeconds, reactivateArmorType, reactivateArmorValue);
-            }
+            ArmorBase armor = Armors.Find(armor => armor.GetType() == type);
+            if(armor == null) throw new InvalidOperationException($"Armor of type '{type.Name}' not found, Make sure it is registered.");
+            return armor;
         }
 
         public void AddArmor<T>(float maxArmorValue, float regenerationRate, float regenCooldownSeconds, ArmorReactivateType reactivateArmorType, float reactivateArmorValue) where T : ArmorBase {
@@ -67,6 +64,8 @@ namespace JARL.Armor {
                 Player.data.view.RPC(nameof(RPCA_AddArmor), RpcTarget.All, typeof(T).AssemblyQualifiedName, maxArmorValue, regenerationRate, regenCooldownSeconds, reactivateArmorType, reactivateArmorValue);
             }
         }
+
+        // All methods below are private or internal
 
         private void Update() {
             float totalArmor = 0;
@@ -109,8 +108,6 @@ namespace JARL.Armor {
         private void OnDestroy() {
             ArmorFramework.ArmorHandlers.Remove(Player);
         }
-
-
 
         internal void ProcessDamage(ref Vector2 damageVector, Player damagingPlayer, Player hurtPlayer, ArmorDamagePatchType armorDamagePatch) {
             LoggingUtils.LogInfo("Proocessing Damage");
