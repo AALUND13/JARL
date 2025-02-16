@@ -21,7 +21,8 @@ namespace JARL.Bases {
         Epic,
         Legendary,
         Mythical,
-        Divine
+        Divine,
+        Unique
     }
 
     // This just the `CardType` enum from the `ClassesManagerReborn` mod but with 'None' added
