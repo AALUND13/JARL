@@ -57,8 +57,7 @@ namespace JARL.Bases {
 
         public sealed override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block) {
             cardInfo.GetAdditionalData().canBeReassigned = CanBeReassigned;
-            cardInfo.rarity = GetRarity();
-
+            
             OnSetupCard(cardInfo, gun, cardStats, statModifiers, block);
         }
         public sealed override void Callback() {
@@ -72,6 +71,7 @@ namespace JARL.Bases {
 
         public void Register(CardInfo cardInfo) {
             if(IsHidden) ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo);
+            cardInfo.rarity = GetRarity();
 
             // Cobine the RequiredClass and RequiredClassTree into RequiredClassesTree
             if(CardClassType != 0) {
