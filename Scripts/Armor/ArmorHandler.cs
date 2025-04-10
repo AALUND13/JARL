@@ -34,7 +34,7 @@ namespace JARL.Armor {
 
             foreach(ArmorBase armor in ArmorFramework.RegisteredArmorTypes) {
                 LoggingUtils.LogInfo($"Resetting stats for ArmorType: {armor.GetType().Name}.");
-                ArmorBase cloneArmor = (ArmorBase)Activator.CreateInstance(armor.GetType());
+                ArmorBase cloneArmor = armor.Clone();
                 cloneArmor.ArmorHandler = this;
 
                 Armors.Add(cloneArmor);

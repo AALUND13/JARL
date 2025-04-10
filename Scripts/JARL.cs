@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using CardChoiceSpawnUniqueCardPatch;
 using HarmonyLib;
 using JARL.Armor;
 using JARL.Armor.Bases.Builtin;
@@ -25,7 +26,7 @@ namespace JARL {
         internal const string ModInitials = "JARL";
         internal const string ModId = "com.aalund13.rounds.jarl";
         internal const string ModName = "Just Another Rounds Library";
-        internal const string Version = "2.6.2"; // What version are we on (major.minor.patch)?
+        internal const string Version = "2.6.3"; // What version are we on (major.minor.patch)?
 
         internal static List<BaseUnityPlugin> Plugins;
         internal static AssetBundle Assets;

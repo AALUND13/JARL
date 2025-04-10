@@ -45,6 +45,8 @@ namespace JARL.Armor.Bases {
 
         public ArmorHandler ArmorHandler { get; internal set; }
 
+        
+
         public bool HasArmorTag(string armorTag) {
             return ArmorTags.Contains(armorTag);
         }
@@ -70,6 +72,10 @@ namespace JARL.Armor.Bases {
                 float healValue = ArmorRegenerationRate * Time.deltaTime;
                 HealArmor(healValue);
             }
+        }
+
+        public virtual ArmorBase Clone() {
+            return (ArmorBase)MemberwiseClone();
         }
 
         public virtual DamageArmorInfo OnDamage(float damage, Player DamagingPlayer, ArmorDamagePatchType? armorDamagePatchType) {

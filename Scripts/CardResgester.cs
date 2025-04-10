@@ -38,30 +38,31 @@ namespace JARL {
                 CardInfo cardInfo = Card.GetComponent<CardInfo>();
                 CustomUnityCard customCard = Card.GetComponent<CustomUnityCard>();
                 if(cardInfo == null) {
-                    Debug.LogError($"[{modName}][Card] {Card.name} does not have a 'CardInfo' component");
+                    UnityEngine.Debug.LogError($"[{modName}][Card] {Card.name} does not have a 'CardInfo' component");
                     continue;
                 } else if(customCard == null) {
-                    Debug.LogError($"[{modName}][Card] {cardInfo.cardName} does not have a 'CustomUnityCard' component");
+                    UnityEngine.Debug.LogError($"[{modName}][Card] {cardInfo.cardName} does not have a 'CustomUnityCard' component");
                     continue;
                 }
                 
                 try {
                     SetupCard(customCard);
                 } catch(Exception e) {
-                    Debug.LogError($"[{modName}][Card] {cardInfo.cardName} failed to setup the card: {e}");
+                    UnityEngine.Debug.LogError($"[{modName}][Card] {cardInfo.cardName} failed to setup the card: {e}");
                     continue;
                 }
                 customCard.RegisterUnityCard((registerCardInfo) => {
                     try {
                         customCard.Register(registerCardInfo);
                     } catch(Exception e) {
-                        Debug.LogError($"[{modName}][Card] {registerCardInfo.cardName} failed to execute the 'Register' method: {e}");
+                        UnityEngine.Debug.LogError($"[{modName}][Card] {registerCardInfo.cardName} failed to execute the 'Register' method: {e}");
                     }
                 });
 
-                Debug.Log($"[{modName}][Card] Registered Card: {cardInfo.cardName}");
+                UnityEngine.Debug.Log($"[{modName}][Card] Registered Card: {cardInfo.cardName}");
                 ModCards.Add(cardInfo.cardName, cardInfo);
             }
+
         }
 
         public static CardResgester GetCardResgester<T>() where T : BaseUnityPlugin {
