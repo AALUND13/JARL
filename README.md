@@ -19,7 +19,7 @@ public class ExampleArmor : ArmorBase {
         return new BarColor(Color.cyan * 0.6f, Color.cyan * 0.45f);
     }
 
-    public override void OnRegister() {
+    public ExampleArmor() {
         ArmorTags.Add("CanArmorPierce"); // Add this tag if the armor can be pierce
     }
 }
