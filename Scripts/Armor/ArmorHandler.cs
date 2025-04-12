@@ -106,6 +106,7 @@ namespace JARL.Armor {
         }
 
         private void OnDestroy() {
+            DestroyAllArmorHealthBar();
             ArmorFramework.ArmorHandlers.Remove(Player);
         }
 
