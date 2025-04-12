@@ -1,4 +1,5 @@
 ﻿using JARL.Armor.Utlis;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ namespace JARL.Armor.Bases {
         public abstract BarColor GetBarColor();
 
         public ArmorDamagePatchType ArmorDamagePatch = ArmorDamagePatchType.TakeDamage | ArmorDamagePatchType.TakeDamageOverTime;
-
+        
         public List<string> ArmorTags = new List<string>();
 
         public float MaxArmorValue = 0;
@@ -61,7 +62,7 @@ namespace JARL.Armor.Bases {
             CurrentArmorValue = DamageArmorInfo.Armor;
             if(CurrentArmorValue <= 0)
                 IsActive = false;
-
+            
             LastStateChangeTime = Time.time;
 
             return CurrentArmorValue;
@@ -74,10 +75,6 @@ namespace JARL.Armor.Bases {
             }
         }
 
-        public virtual ArmorBase Clone() {
-            return (ArmorBase)MemberwiseClone();
-        }
-
         public virtual DamageArmorInfo OnDamage(float damage, Player DamagingPlayer, ArmorDamagePatchType? armorDamagePatchType) {
             return ArmorUtils.ApplyDamage(CurrentArmorValue, damage);
         }
@@ -88,7 +85,13 @@ namespace JARL.Armor.Bases {
 
         public virtual void OnReactivate() { }
 
+        [Obsolete("Use the Constructor instead, this method will be removed in the future")]
         public virtual void OnRegister() { }
+
+        [Obsolete("This method will be removed in the future along with the OnRegister method")]
+        public virtual ArmorBase Clone() {
+            return (ArmorBase)MemberwiseClone();
+        }
 
         public override string ToString() {
             return GetType().Name.Replace("Armor", "");
