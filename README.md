@@ -36,7 +36,7 @@ void Start() {
 You can add armor to a player, for example, when a player picks a card, by using the `AddArmor` method from the `ArmorHandler` class:
 ```csharp
 public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats) {
-    ArmorFramework.armorHandlers[player].AddArmor<ExampleArmor>(50, 5, 5, ArmorReactivateType.Second, 5);
+    ArmorFramework.ArmorHandlers[player].AddArmor<ExampleArmor>(50, 5, 5, ArmorReactivateType.Second, 5);
 }
 ```
 ## Custom Unity Card
