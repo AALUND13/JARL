@@ -34,7 +34,9 @@ namespace JARL.Armor {
 
             foreach(ArmorBase armor in ArmorFramework.RegisteredArmorTypes) {
                 LoggingUtils.LogInfo($"Resetting stats for ArmorType: {armor.GetType().Name}.");
-                armors.Add(Activator.CreateInstance(armor.GetType()) as ArmorBase);
+                ArmorBase armorBase = Activator.CreateInstance(armor.GetType()) as ArmorBase;
+                armorBase.ArmorHandler = this;
+                armors.Add(armorBase);
             }
 
             armors = Armors.OrderByDescending(armor => armor.Priority).ToList();
@@ -147,8 +149,6 @@ namespace JARL.Armor {
                     LoggingUtils.LogInfo($"Running armor processor '{processor.GetType().Name}' for '{armor.GetType().Name}'");
                     try {
                         remainingDamage = processor.BeforeArmorProcess(remainingDamage, damageVector.magnitude);
-
-
                     } catch(Exception ex) {
                         UnityEngine.Debug.LogError($"An error occurred while executing the '{processor.GetType().Name}' processor: {ex}");
                         break;
