@@ -1,9 +1,10 @@
 ﻿using JARL.Armor.Bases;
+using JARL.Armor.Bases.Builtin;
+using JARL.Armor.Processors;
 using JARL.Extensions;
 using JARL.Utils;
 using ModsPlus;
 using Photon.Pun;
-using Photon.Pun.Simple;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,49 +12,44 @@ using UnboundLib.Extensions;
 using UnityEngine;
 
 namespace JARL.Armor {
-    public delegate DamageArmorInfo ProcessDamageDelegate(ArmorBase armor, Player damagingPlayer, Player hurtPlayer, float remainingDamage, float originalDamage);
-    public delegate ArmorProcessingResult ProcessDamageBeforeDelegate(ArmorBase armor, Player damagingPlayer, Player hurtPlayer, float remainingDamage, float originalDamage);
+    [Obsolete("Use ArmorProcessor instead. This will be removed in the future.")] public delegate DamageArmorInfo ProcessDamageDelegate(ArmorBase armor, Player damagingPlayer, Player hurtPlayer, float remainingDamage, float originalDamage);
+    [Obsolete("Use ArmorProcessor instead. This will be removed in the future.")] public delegate ArmorProcessingResult ProcessDamageBeforeDelegate(ArmorBase armor, Player damagingPlayer, Player hurtPlayer, float remainingDamage, float originalDamage);
 
     public class ArmorHandler : MonoBehaviour {
-        private readonly Dictionary<ArmorBase, GameObject> armorHealthBars = new Dictionary<ArmorBase, GameObject>();
-        private int activeArmorsCount;
+        public IReadOnlyList<ArmorBase> ActiveArmors => armors.FindAll(armor => armor.MaxArmorValue > 0).AsReadOnly();
 
-        public List<ArmorBase> Armors { get; private set; } = new List<ArmorBase>();
-        public List<ArmorBase> ActiveArmors => Armors.FindAll(armor => armor.MaxArmorValue > 0);
+        [Obsolete("Use ArmorProcessor instead. This will be removed in the future.")] public static event ProcessDamageBeforeDelegate DamageProcessingMethodsBefore;
+        [Obsolete("Use ArmorProcessor instead. This will be removed in the future.")] public static event ProcessDamageDelegate DamageProcessingMethodsAfter;
 
-
-        public static event ProcessDamageBeforeDelegate DamageProcessingMethodsBefore;
-        public static event ProcessDamageDelegate DamageProcessingMethodsAfter;
-
+        public List<ArmorBase> armors = new List<ArmorBase>();
+        public IReadOnlyList<ArmorBase> Armors => armors.AsReadOnly();
 
         public Player Player { get; private set; }
 
+        private readonly Dictionary<ArmorBase, GameObject> armorHealthBars = new Dictionary<ArmorBase, GameObject>();
+        private int activeArmorsCount;
 
         public void ResetArmorStats() {
-            Armors.Clear();
+            armors.Clear();
 
             foreach(ArmorBase armor in ArmorFramework.RegisteredArmorTypes) {
                 LoggingUtils.LogInfo($"Resetting stats for ArmorType: {armor.GetType().Name}.");
-                ArmorBase cloneArmor = armor.Clone();
-                cloneArmor.ArmorHandler = this;
-
-                Armors.Add(cloneArmor);
+                armors.Add(Activator.CreateInstance(armor.GetType()) as ArmorBase);
             }
 
-            Armors = Armors.OrderByDescending(armor => armor.Priority).ToList();
+            armors = Armors.OrderByDescending(armor => armor.Priority).ToList();
         }
 
         public ArmorBase GetArmorByType<T>() where T : ArmorBase {
-            ArmorBase armor = Armors.Find(armorType => armorType.GetType() == typeof(T));
+            ArmorBase armor = armors.Find(armorType => armorType.GetType() == typeof(T));
             if(armor == null) throw new InvalidOperationException($"Armor of type '{typeof(T).Name}' not found, Make sure it is registered.");
             return armor;
         }
-
         public ArmorBase GetArmorByType(Type type) {
             if(type == null) throw new ArgumentNullException(nameof(type));
-            if(!typeof(ArmorBase).IsAssignableFrom(type)) throw new ArgumentException($"Type '{type.Name}' is not an ArmorBase type.");
+            if(!typeof(ArmorBase).IsAssignableFrom(type)) throw new ArgumentException($"Type '{type.Name}' is not an Armor type.");
 
-            ArmorBase armor = Armors.Find(armorType => armorType.GetType() == type);
+            ArmorBase armor = armors.Find(armorType => armorType.GetType() == type);
             if(armor == null) throw new InvalidOperationException($"Armor of type '{type.Name}' not found, Make sure it is registered.");
             return armor;
         }
@@ -121,9 +117,9 @@ namespace JARL.Armor {
                 if(remainingDamage <= 0) break;
 
                 if(!armor.IsActive || armor.MaxArmorValue == 0) continue;
+                float armorLastHealth = armor.CurrentArmorValue;
 
-                LoggingUtils.LogInfo($"Runing all 'DamageProcessingMethodsBefore' method for '{armor.GetType().Name}'");
-
+                #region Old Damage Processing Methods
                 try {
                     ArmorProcessingResult? processingResult = DamageProcessingMethodsBefore?.Invoke(armor, damagingPlayer, hurtPlayer, remainingDamage, damageVector.magnitude);
 
@@ -134,8 +130,29 @@ namespace JARL.Armor {
                         if(processingResult.Value.SkipArmorDamageProcess) continue;
                     }
                 } catch(Exception ex) {
-                    UnityEngine.Debug.LogError($"An error occurred while executing the '{ex.TargetSite.Name}' event: {ex}");
+                    UnityEngine.Debug.LogError($"An error occurred while executing the '{ex.TargetSite.Name}' error: {ex}");
                     break;
+                }
+                #endregion
+
+                List<ArmorProcessor> processors = new List<ArmorProcessor>();
+                foreach(Type type in ArmorFramework.armorProcessorTypes) {
+                    if(type.IsSubclassOf(typeof(ArmorProcessor))) {
+                        ArmorProcessor armorProcessor = (ArmorProcessor)Activator.CreateInstance(type, armor, damagingPlayer, hurtPlayer, armorDamagePatch);
+                        processors.Add(armorProcessor);
+                    }
+                }
+
+                foreach(ArmorProcessor processor in processors) {
+                    LoggingUtils.LogInfo($"Running armor processor '{processor.GetType().Name}' for '{armor.GetType().Name}'");
+                    try {
+                        remainingDamage = processor.BeforeArmorProcess(remainingDamage, damageVector.magnitude);
+
+
+                    } catch(Exception ex) {
+                        UnityEngine.Debug.LogError($"An error occurred while executing the '{processor.GetType().Name}' processor: {ex}");
+                        break;
+                    }
                 }
 
                 DamageArmorInfo armorAndDamage;
@@ -154,7 +171,17 @@ namespace JARL.Armor {
                     break;
                 }
 
-                LoggingUtils.LogInfo($"Runing all 'DamageProcessingMethodsAfter' method for '{armor.GetType().Name}'");
+                foreach(ArmorProcessor processor in processors) {
+                    LoggingUtils.LogInfo($"Running armor processor '{processor.GetType().Name}' for '{armor.GetType().Name}'");
+                    try {
+                        remainingDamage = processor.AfterArmorProcess(remainingDamage, damageVector.magnitude, Mathf.Max(armorLastHealth - armor.CurrentArmorValue, 0));
+                    } catch(Exception ex) {
+                        UnityEngine.Debug.LogError($"An error occurred while executing the '{processor.GetType().Name}' processor: {ex}");
+                        break;
+                    }
+                }
+
+                #region Old Damage Processing Methods
                 try {
                     DamageArmorInfo? result = DamageProcessingMethodsAfter?.Invoke(armor, damagingPlayer, hurtPlayer, remainingDamage, damageVector.magnitude);
 
@@ -166,6 +193,7 @@ namespace JARL.Armor {
                     UnityEngine.Debug.LogError($"An error occurred while executing the '{ex.TargetSite.Name}' event: {ex}");
                     break;
                 }
+                #endregion
             }
 
             Vector2 remainingDamageDirection = damageVector.normalized * remainingDamage;
@@ -174,7 +202,7 @@ namespace JARL.Armor {
         }
 
         internal void OnRespawn() {
-            foreach(ArmorBase armor in Armors) {
+            foreach(ArmorBase armor in ActiveArmors) {
                 if(armor.RegenerateFullyAfterRevive) {
                     LoggingUtils.LogInfo($"Regenerating ArmorType '{armor.GetType().Name}' fully");
                     armor.CurrentArmorValue = armor.MaxArmorValue;

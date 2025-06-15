@@ -23,7 +23,7 @@ namespace JARL {
             customCard.cardStats = customCard.GetComponent<ApplyCardStats>();
             customCard.statModifiers = customCard.GetComponent<CharacterStatModifiers>();
             customCard.block = customCard.gameObject.GetOrAddComponent<Block>();
-
+            
             customCard.SetupCard(customCard.cardInfo, customCard.gun, customCard.cardStats, customCard.statModifiers, customCard.block);
         }
 

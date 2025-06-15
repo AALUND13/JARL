@@ -4,25 +4,33 @@ using System.Collections.Generic;
 using System.Linq;
 using UnboundLib;
 using System;
+using JARL.Armor.Processors;
 
 namespace JARL.Armor {
     public class ArmorFramework {
+        internal static List<Type> armorProcessorTypes = new List<Type>();
+
         public static List<ArmorBase> RegisteredArmorTypes { get; private set; } = new List<ArmorBase>();
 
         public static readonly Dictionary<Player, ArmorHandler> ArmorHandlers = new Dictionary<Player, ArmorHandler>();
 
+        public static void RegisterArmorProcessor<T>() where T : ArmorProcessor {
+            Type type = typeof(T);
+            if(armorProcessorTypes.Contains(type)) 
+                throw new Exception($"ArmorProcessor type '{type.Name}' is already registered");
+
+            armorProcessorTypes.Add(type);
+            LoggingUtils.LogInfo($"Registered ArmorProcessor type: '{type.Name}'");
+        }
+
         public static void RegisterArmorType<T>() where T : ArmorBase, new() {
             RegisterArmorType(new T());
         }
-
         public static void RegisterArmorType(ArmorBase armorType) {
             if(armorType == null) 
                 throw new ArgumentNullException(nameof(armorType));
             else if(RegisteredArmorTypes.Contains(armorType)) 
                 throw new Exception($"ArmorType '{armorType.GetType().Name}' is already registered");
-
-            LoggingUtils.LogInfo($"Registering ArmorType: '{armorType.GetType().Name}'");
-
 
             RegisteredArmorTypes.Add(armorType);
 
