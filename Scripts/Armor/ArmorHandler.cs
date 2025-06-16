@@ -140,7 +140,12 @@ namespace JARL.Armor {
                 List<ArmorProcessor> processors = new List<ArmorProcessor>();
                 foreach(Type type in ArmorFramework.armorProcessorTypes) {
                     if(type.IsSubclassOf(typeof(ArmorProcessor))) {
-                        ArmorProcessor armorProcessor = (ArmorProcessor)Activator.CreateInstance(type, armor, damagingPlayer, hurtPlayer, armorDamagePatch);
+                        ArmorProcessor armorProcessor = (ArmorProcessor)Activator.CreateInstance(type);
+                        armorProcessor.Armor = armor;
+                        armorProcessor.DamagingPlayer = damagingPlayer;
+                        armorProcessor.HurtPlayer = hurtPlayer;
+                        armorProcessor.ArmorDamagePatchType = armorDamagePatch;
+
                         processors.Add(armorProcessor);
                     }
                 }
