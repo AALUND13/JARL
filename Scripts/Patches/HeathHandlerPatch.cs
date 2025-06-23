@@ -7,9 +7,12 @@ using UnityEngine;
 namespace JARL.Patches {
     [HarmonyPatch(typeof(HealthHandler))]
     public class HealthHandlerPatch {
+        public static bool TakeDamageRunning = false;
+
         [HarmonyPatch("TakeDamage", typeof(Vector2), typeof(Vector2), typeof(Color), typeof(GameObject), typeof(Player), typeof(bool), typeof(bool))]
         [HarmonyPrefix]
-        public static void TakeDamage(HealthHandler __instance, ref Vector2 damage, Player damagingPlayer, bool ignoreBlock) {
+        public static void TakeDamagePrefix(HealthHandler __instance, ref Vector2 damage, Player damagingPlayer, bool ignoreBlock) {
+            TakeDamageRunning = true;
             CharacterData data = (CharacterData)Traverse.Create(__instance).Field("data").GetValue();
             if(damage == Vector2.zero || !data.isPlaying || data.dead || (data.block.IsBlocking() && !ignoreBlock) || __instance.isRespawning) {
                 return;
@@ -20,6 +23,10 @@ namespace JARL.Patches {
                 data.player.GetComponent<ArmorHandler>().ProcessDamage(ref damage, damagingPlayer, data.player, ArmorDamagePatchType.TakeDamage);
             }
         }
+
+        [HarmonyPatch("TakeDamage", typeof(Vector2), typeof(Vector2), typeof(Color), typeof(GameObject), typeof(Player), typeof(bool), typeof(bool))]
+        [HarmonyPostfix]
+        public static void TakeDamagePostfix(HealthHandler __instance, Vector2 damage) => TakeDamageRunning = false;
 
         [HarmonyPatch("DoDamage")]
         [HarmonyPrefix]

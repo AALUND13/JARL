@@ -11,7 +11,7 @@ namespace JARL.Patches {
         [HarmonyPrefix]
         public static bool TakeDamageOverTimePrefix(DamageOverTime __instance, ref Vector2 damage, Player damagingPlayer) {
             CharacterData data = (CharacterData)Traverse.Create(__instance).Field("data").GetValue();
-            if(damage == Vector2.zero || !data.isPlaying || data.dead || __instance.GetComponent<HealthHandler>().isRespawning) {
+            if(damage == Vector2.zero || !data.isPlaying || data.dead || __instance.GetComponent<HealthHandler>().isRespawning || HealthHandlerPatch.TakeDamageRunning) {
                 return true;
             }
 
