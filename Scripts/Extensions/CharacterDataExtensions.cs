@@ -21,13 +21,13 @@ namespace JARL.Extensions {
     public static class CharacterDataExtensions {
         public static readonly ConditionalWeakTable<CharacterData, JARLCharacterDataAdditionalData> data = new ConditionalWeakTable<CharacterData, JARLCharacterDataAdditionalData>();
 
-        public static JARLCharacterDataAdditionalData GetAdditionalData(this CharacterData block) {
-            return data.GetOrCreateValue(block);
+        public static JARLCharacterDataAdditionalData GetAdditionalData(this CharacterData data) {
+            return CharacterDataExtensions.data.GetOrCreateValue(data);
         }
 
-        public static void AddData(this CharacterData block, JARLCharacterDataAdditionalData value) {
+        public static void AddData(this CharacterData data, JARLCharacterDataAdditionalData value) {
             try {
-                data.Add(block, value);
+                CharacterDataExtensions.data.Add(data, value);
             } catch(Exception) { }
         }
     }
