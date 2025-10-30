@@ -290,7 +290,7 @@ MonoBehaviour:
   statModifiers: {fileID: 0}
   block: {fileID: 0}
   OverrideClassName: 
-  CardClassType: 16
+  CardClassType: 32
   CardLimit: 4
   RequiredClass: {fileID: 0}
   RequiredClassTree: []
