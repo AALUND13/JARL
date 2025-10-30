@@ -11,12 +11,12 @@ namespace JARL.Patches {
         [HarmonyPrefix]
         public static bool TakeDamageOverTimePrefix(DamageOverTime __instance, ref Vector2 damage, Player damagingPlayer) {
             CharacterData data = (CharacterData)Traverse.Create(__instance).Field("data").GetValue();
-            if(damage == Vector2.zero || !data.isPlaying || data.dead || __instance.GetComponent<HealthHandler>().isRespawning || HealthHandlerPatch.TakeDamageRunning) {
+            if(!data.CanDamage() || HealthHandlerPatch.TakeDamageRunning) {
                 return true;
             }
 
             if(data.GetAdditionalData().totalArmor > 0) {
-                data.player.GetComponent<ArmorHandler>().ProcessDamage(ref damage, damagingPlayer, data.player, ArmorDamagePatchType.TakeDamageOverTime);
+                ArmorFramework.ArmorHandlers[data.player].ProcessDamage(ref damage, damagingPlayer, data.player, ArmorDamagePatchType.TakeDamageOverTime);
 
                 if(damage == Vector2.zero) {
                     return false;
@@ -24,10 +24,6 @@ namespace JARL.Patches {
             }
 
             return true;
-        }
-
-        private static IEnumerator EmptyEnumerator() {
-            yield break;
         }
     }
 }

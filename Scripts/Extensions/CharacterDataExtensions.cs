@@ -30,5 +30,9 @@ namespace JARL.Extensions {
                 CharacterDataExtensions.data.Add(data, value);
             } catch(Exception) { }
         }
+
+        public static bool CanDamage(this CharacterData data, bool ignoreBlock = false) {
+            return data.isPlaying && !data.dead && (!data.block.IsBlocking() || ignoreBlock) && !data.healthHandler.isRespawning;
+        }
     }
 }

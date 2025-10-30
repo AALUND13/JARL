@@ -2,6 +2,7 @@
 using JARL.Armor;
 using JARL.Extensions;
 using JARL.Utils;
+using UnboundLib;
 using UnityEngine;
 
 namespace JARL.Patches {
@@ -14,13 +15,13 @@ namespace JARL.Patches {
         public static void TakeDamagePrefix(HealthHandler __instance, ref Vector2 damage, Player damagingPlayer, bool ignoreBlock) {
             TakeDamageRunning = true;
             CharacterData data = (CharacterData)Traverse.Create(__instance).Field("data").GetValue();
-            if(damage == Vector2.zero || !data.isPlaying || data.dead || (data.block.IsBlocking() && !ignoreBlock) || __instance.isRespawning) {
+            if(!data.CanDamage() || !(bool)data.playerVel.GetFieldValue("simulated")) {
                 return;
             }
 
             if(data.GetAdditionalData().totalArmor > 0) {
 
-                data.player.GetComponent<ArmorHandler>().ProcessDamage(ref damage, damagingPlayer, data.player, ArmorDamagePatchType.TakeDamage);
+                ArmorFramework.ArmorHandlers[data.player].ProcessDamage(ref damage, damagingPlayer, data.player, ArmorDamagePatchType.TakeDamage);
             }
         }
 
@@ -32,17 +33,16 @@ namespace JARL.Patches {
         [HarmonyPrefix]
         public static void DoDamage(HealthHandler __instance, ref Vector2 damage, Vector2 position, Color blinkColor, GameObject damagingWeapon, Player damagingPlayer, bool healthRemoval, bool lethal, bool ignoreBlock) {
             CharacterData data = (CharacterData)Traverse.Create(__instance).Field("data").GetValue();
-            if(damage == Vector2.zero || !data.isPlaying || data.dead || (data.block.IsBlocking() && !ignoreBlock) || __instance.isRespawning) {
-                return;
-            }
+            if(!data.CanDamage()) return;
 
             if(data.GetAdditionalData().totalArmor > 0) {
-
-                data.player.GetComponent<ArmorHandler>().ProcessDamage(ref damage, damagingPlayer, data.player, ArmorDamagePatchType.DoDamage);
+                ArmorFramework.ArmorHandlers[data.player].ProcessDamage(ref damage, damagingPlayer, data.player, ArmorDamagePatchType.DoDamage);
             }
 
             DeathHandler.PlayerDamaged(data.player, damagingPlayer, damage.magnitude);
         }
+
+
 
         [HarmonyPatch("Revive")]
         [HarmonyPostfix]
@@ -51,8 +51,6 @@ namespace JARL.Patches {
                 ___data.GetComponent<ArmorHandler>().OnRespawn();
             }
         }
-
-
 
         [HarmonyPatch("RPCA_Die")]
         [HarmonyPrefix]
