@@ -15,7 +15,7 @@ namespace JARL.Patches {
         public static void TakeDamagePrefix(HealthHandler __instance, ref Vector2 damage, Player damagingPlayer, bool ignoreBlock) {
             TakeDamageRunning = true;
             CharacterData data = (CharacterData)Traverse.Create(__instance).Field("data").GetValue();
-            if(!data.CanDamage() || !(bool)data.playerVel.GetFieldValue("simulated")) {
+            if(!data.CanDamage(ignoreBlock) || !(bool)data.playerVel.GetFieldValue("simulated")) {
                 return;
             }
 
@@ -33,7 +33,7 @@ namespace JARL.Patches {
         [HarmonyPrefix]
         public static void DoDamage(HealthHandler __instance, ref Vector2 damage, Vector2 position, Color blinkColor, GameObject damagingWeapon, Player damagingPlayer, bool healthRemoval, bool lethal, bool ignoreBlock) {
             CharacterData data = (CharacterData)Traverse.Create(__instance).Field("data").GetValue();
-            if(!data.CanDamage()) return;
+            if(!data.CanDamage(ignoreBlock)) return;
 
             if(data.GetAdditionalData().totalArmor > 0) {
                 ArmorFramework.ArmorHandlers[data.player].ProcessDamage(ref damage, damagingPlayer, data.player, ArmorDamagePatchType.DoDamage);

@@ -1,5 +1,4 @@
 ﻿using JARL.Armor.Bases;
-using JARL.Armor.Bases.Builtin;
 using JARL.Armor.Processors;
 using JARL.Extensions;
 using JARL.Utils;
@@ -236,7 +235,7 @@ namespace JARL.Armor {
 
         private void UpdateArmorHealthBar() {
             foreach(KeyValuePair<ArmorBase, GameObject> armorAndHealthBar in armorHealthBars) {
-                CustomHealthBar armorHealthBar = armorAndHealthBar.Value.GetComponent<CustomHealthBar>();
+                MonoBehaviours.CustomHealthBar armorHealthBar = armorAndHealthBar.Value.GetComponent<MonoBehaviours.CustomHealthBar>();
                 armorHealthBar.SetValues(armorAndHealthBar.Key.CurrentArmorValue, armorAndHealthBar.Key.MaxArmorValue);
 
                 if(armorAndHealthBar.Key.IsActive) {
@@ -265,7 +264,7 @@ namespace JARL.Armor {
             GameObject healthBarObj = new GameObject($"{armor.GetType().Name} Armor Health Bar");
             healthBarObj.transform.SetParent(Player.GetComponentInChildren<PlayerWobblePosition>().transform);
 
-            healthBarObj.AddComponent<CustomHealthBar>();
+            healthBarObj.AddComponent<MonoBehaviours.CustomHealthBar>();
             Player.AddStatusIndicator(healthBarObj);
 
             armorHealthBars.Add(armor, healthBarObj);
