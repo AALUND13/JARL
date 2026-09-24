@@ -42,16 +42,6 @@ namespace JARL.Armor {
             LoggingUtils.LogInfo($"Successfully registered ArmorType: '{armorType.GetType().Name}'");
         }
 
-        internal static void ResetEveryPlayerArmorStats(bool skipArmorHandlerChecking = true) {
-            foreach(Player player in PlayerManager.instance.players) {
-                if(skipArmorHandlerChecking || player.GetComponent<ArmorHandler>() == null) {
-                    LoggingUtils.LogInfo($"Reseting player id '{player.playerID}' armor stats");
-                    var armorHandler = player.gameObject.GetOrAddComponent<ArmorHandler>();
-                    armorHandler.ResetArmorStats();
-                }
-            }
-        }
-
         internal static void RegisterArmorTabinfoInterface(ArmorBase armor) {
             if(JustAnotherRoundsLibrary.Plugins.Exists(plugin => plugin.Info.Metadata.GUID == "com.willuwontu.rounds.tabinfo")) {
                 TabinfoInterface.RegisterArmorTabinfoInterface(armor);

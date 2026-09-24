@@ -42,7 +42,6 @@ namespace JARL {
             ConfigHandler.RegesterMenu(Config);
 
             Plugins = (List<BaseUnityPlugin>)typeof(BepInEx.Bootstrap.Chainloader).GetField("_plugins", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
-            UnboundLib.GameModes.GameModeManager.AddHook(UnboundLib.GameModes.GameModeHooks.HookGameStart, (_) => GameStart());
 
             if(Plugins.Exists(plugin => plugin.Info.Metadata.GUID == "com.willuwontu.rounds.tabinfo")) {
                 TabinfoInterface.SetUpTabinfoInterface();
@@ -50,15 +49,6 @@ namespace JARL {
 
             ArmorFramework.RegisterArmorType<DefaultArmor>();
             ArmorFramework.RegisterArmorProcessor<ArmorPiercePercentProcessor>();
-        }
-
-        void Update() {
-            ArmorFramework.ResetEveryPlayerArmorStats(false);
-        }
-
-        IEnumerator GameStart() {
-            ArmorFramework.ResetEveryPlayerArmorStats();
-            yield break;
         }
     }
 }
