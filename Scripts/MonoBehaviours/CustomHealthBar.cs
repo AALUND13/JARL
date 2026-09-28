@@ -26,6 +26,7 @@ namespace JARL.MonoBehaviours {
 
         private void Awake() {
             HealthBar healthBar = Instantiate(BaseGameAssets.BaseHealthBar.gameObject, transform).GetComponent<HealthBar>();
+            healthBar.transform.Find("Canvas/PlayerName").gameObject.SetActive(false);
             HPFill = healthBar.hp;
             WhiteFill = healthBar.white;
             Destroy(healthBar);

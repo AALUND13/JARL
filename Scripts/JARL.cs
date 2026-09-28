@@ -3,7 +3,6 @@ using HarmonyLib;
 using JARL.Armor;
 using JARL.Armor.Bases.Builtin;
 using JARL.Armor.Builtin;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -25,7 +24,7 @@ namespace JARL {
         internal const string ModInitials = "JARL";
         internal const string ModId = "com.aalund13.rounds.jarl";
         internal const string ModName = "Just Another Rounds Library";
-        internal const string Version = "2.9.0"; // What version are we on (major.minor.patch)?
+        internal const string Version = "2.9.1"; // What version are we on (major.minor.patch)?
 
         internal static List<BaseUnityPlugin> Plugins;
         internal static AssetBundle Assets;
@@ -43,7 +42,7 @@ namespace JARL {
 
             Plugins = (List<BaseUnityPlugin>)typeof(BepInEx.Bootstrap.Chainloader).GetField("_plugins", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
 
-            if(Plugins.Exists(plugin => plugin.Info.Metadata.GUID == "com.willuwontu.rounds.tabinfo")) {
+            if (Plugins.Exists(plugin => plugin.Info.Metadata.GUID == "com.willuwontu.rounds.tabinfo")) {
                 TabinfoInterface.SetUpTabinfoInterface();
             }
 
